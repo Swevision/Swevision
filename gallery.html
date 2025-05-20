@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gallery - Swevision</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: black;
+      color: white;
+    }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .logo { font-size: 1.5rem; font-weight: bold; color: #c084fc; }
+    nav a {
+      color: white; text-decoration: none; margin-left: 1.5rem;
+    }
+    nav a:hover { color: #d8b4fe; }
+    .section {
+      padding: 3rem 2rem;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Swevision</div>
+    <nav>
+      <a href="show.html">Show</a>
+      <a href="participants.html">Participants</a>
+      <a href="news.html">News</a>
+      <a href="gallery.html">Gallery</a>
+    </nav>
+  </header>
+
+  <section class="section">
+    <h2>Photo Gallery</h2>
+    <div class="gallery">
+      <img src="https://via.placeholder.com/300x200/6b21a8/ffffff?text=Stage+1" alt="Stage 1">
+      <img src="https://via.placeholder.com/300x200/9333ea/ffffff?text=Artist+2" alt="Artist 2">
+      <img src="https://via.placeholder.com/300x200/7e22ce/ffffff?text=Live+Show" alt="Live Show">
+      <img src="https://via.placeholder.com/300x200/4c1d95/ffffff?text=Crowd" alt="Crowd">
+    </div>
+  </section>
+</body>
+</html>

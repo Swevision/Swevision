@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Swevision 2025</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #c084fc;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: #d8b4fe;
+    }
+    .hero {
+      background-color: #6b21a8;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .hero h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+    }
+    .hero p {
+      margin: 1rem 0 2rem;
+      color: #e9d5ff;
+      font-size: 1.1rem;
+    }
+    .btn {
+      background-color: #fff;
+      color: #000;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #eee;
+    }
+    .section {
+      padding: 3rem 2rem;
+    }
+    .section h3 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .grid-4 {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    .card {
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+    }
+    .card:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .card h4 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+    }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <div class="logo">Swevision</div>
+    <nav>
+      <a href="#show">Show</a>
+      <a href="#participants">Participants</a>
+      <a href="#news">News</a>
+      <a href="#gallery">Gallery</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="show">
+    <h2>Welcome to Swevision 2025</h2>
+    <p>Experience the music. Feel the magic. Join the celebration.</p>
+    <button class="btn">Watch Live</button>
+  </section>
+
+  <!-- News -->
+  <section class="section" id="news">
+    <h3>Latest News</h3>
+    <div class="grid grid-3">
+      <div class="card">
+        <h4>News Title 1</h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      </div>
+      <div class="card">
+        <h4>News Title 2</h4>
+        <p>Proin non turpis sit amet justo ullamcorper fermentum.</p>
+      </div>
+      <div class="card">
+        <h4>News Title 3</h4>
+        <p>Sed vitae lectus ut arcu ullamcorper pharetra nec id nulla.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Participants -->
+  <section class="section" id="participants" style="background-color: rgba(255,255,255,0.05);">
+    <h3>Participants</h3>
+    <div class="grid grid-4">
+      <div class="card">
+        <h4>Sweden</h4>
+        <p>Artist Name</p>
+      </div>
+      <div class="card">
+        <h4>France</h4>
+        <p>Artist Name</p>
+      </div>
+      <div class="card">
+        <h4>Germany</h4>
+        <p>Artist Name</p>
+      </div>
+      <div class="card">
+        <h4>Italy</h4>
+        <p>Artist Name</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Swevision. All rights reserved.
+  </footer>
+
+</body>
+</html>
+
