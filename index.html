@@ -2,123 +2,159 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Swevision 2025</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swevision 2025</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #000;
-      color: #fff;
+      color: white;
     }
     header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
+      background: url('6c65b846-7982-428e-8aba-faf42a6887cc.png') center/cover no-repeat;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 1rem 2rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
     }
     .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #c084fc;
+      height: 60px;
     }
     nav a {
-      color: white;
-      text-decoration: none;
       margin-left: 1.5rem;
-      font-weight: 500;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      transition: background 0.3s;
     }
     nav a:hover {
-      color: #d8b4fe;
+      background: rgba(255, 255, 255, 0.1);
     }
-    .hero {
-      background-color: #6b21a8;
-      text-align: center;
-      padding: 4rem 2rem;
+    .slider {
+      position: relative;
+      max-width: 100%;
+      overflow: hidden;
+      height: 80vh;
     }
-    .hero h2 {
-      font-size: 2.5rem;
-      font-weight: 800;
+    .slides {
+      display: flex;
+      transition: transform 1s ease-in-out;
     }
-    .hero p {
-      margin: 1rem 0 2rem;
-      color: #e9d5ff;
-      font-size: 1.1rem;
+    .slide {
+      min-width: 100%;
+      height: 80vh;
+      background-size: cover;
+      background-position: center;
     }
-    .btn {
-      background-color: #fff;
-      color: #000;
-      padding: 0.75rem 1.5rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 4px;
+    .dots {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.5;
       cursor: pointer;
     }
-    .btn:hover {
-      background-color: #eee;
+    .dot.active {
+      opacity: 1;
+      background: #c084fc;
     }
     .section {
-      padding: 3rem 2rem;
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: auto;
     }
     .section h3 {
+      text-align: center;
       font-size: 2rem;
       margin-bottom: 2rem;
     }
-    .grid {
+    .news-grid {
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
     }
-    .grid-3 {
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    .news-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      overflow: hidden;
     }
-    .grid-4 {
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    .news-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
     }
-    .card {
-      background-color: rgba(255, 255, 255, 0.05);
+    .news-card .content {
       padding: 1rem;
-      border-radius: 10px;
-      transition: background 0.3s ease;
+    }
+    .news-card time {
+      font-size: 0.85rem;
+      color: #bbb;
+      display: block;
+      margin-top: 0.5rem;
+    }
+    .winners-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .winner-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: center;
+      padding-bottom: 1rem;
+    }
+    .winner-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .winner-card p {
+      margin: 0.5rem 0;
+    }
+    .all-winners-btn {
+      display: block;
+      margin-left: auto;
+      margin-top: 2rem;
+      background: red;
+      padding: 0.75rem 1.5rem;
+      color: white;
       text-decoration: none;
-      color: inherit;
-    }
-    .card:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-    .card h4 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-    .card p {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 0.95rem;
+      border-radius: 30px;
+      font-weight: 600;
+      width: fit-content;
     }
     footer {
+      background: #111;
       padding: 2rem;
       text-align: center;
       font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.6);
+      color: #aaa;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
 <body>
-
-  <!-- Sticky Header -->
   <header>
-    <a href="index.html" class="logo">Swevision</a>
+    <img src="SweLogo.png" alt="Swevision Logo" class="logo">
     <nav>
-      <a href="vote.html">Vote</a>
+      <a href="index.html">Home</a>
       <a href="show.html">Show</a>
       <a href="participants.html">Participants</a>
       <a href="news.html">News</a>
@@ -126,62 +162,112 @@
     </nav>
   </header>
 
-  <!-- Hero -->
-  <section class="hero" id="show">
-    <h2>Welcome to Swevision 2025</h2>
-    <p>Experience the music. Feel the magic. Join the celebration.</p>
-    <button class="btn">Watch Live</button>
-  </section>
+  <div class="slider">
+    <div class="slides">
+      <div class="slide" style="background-image: url('photo_2025-05-21_10-33-17.jpg');"></div>
+      <div class="slide" style="background-image: url('photo_2025-05-21_10-33-16.jpg');"></div>
+      <div class="slide" style="background-image: url('photo_2025-05-21_10-33-11.jpg');"></div>
+    </div>
+    <div class="dots"></div>
+  </div>
 
-  <!-- News -->
-  <section class="section" id="news">
+  <section class="section">
     <h3>Latest News</h3>
-    <div class="grid grid-3">
-      <div class="card">
-        <h4>The dates of the contest have been announced!</h4>
-        <p>First Semi-Final 17 July, Second Semi-Final 19 July, Grand Final 21 July</p>
+    <div class="news-grid">
+      <div class="news-card">
+        <img src="photo_2025-05-21_10-33-16.jpg" alt="JJ Wins">
+        <div class="content">
+          <h4>Press Conference with JJ</h4>
+          <p>Celebrating the win with media worldwide.</p>
+          <time datetime="2025-05-21T13:00:00Z"></time>
+        </div>
+      </div>
+      <div class="news-card">
+        <img src="photo_2025-05-21_10-33-11.jpg" alt="Stage">
+        <div class="content">
+          <h4>Stage Design Unveiled</h4>
+          <p>A look at the 2025 setup.</p>
+          <time datetime="2025-05-21T10:00:00Z"></time>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Participants -->
-  <section class="section" id="participants" style="background-color: rgba(255,255,255,0.05);">
-    <h3>Participants</h3>
-    <div class="grid grid-4">
-
-      <a href="Malta2025.html" class="card">
-        <h4>Malta</h4>
-        <p>Mariana Conte</p>
-      </a>
-
-      <a href="Netherlands2025.html" class="card">
-        <h4>Netherlands</h4>
-        <p>Joost</p>
-      </a>
-
-      <a href="Australia2025.html" class="card">
-        <h4>Australia</h4>
-        <p>Go-Jo</p>
-      </a>
-
-      <a href="Ukraine2025.html" class="card">
-        <h4>Ukraine</h4>
-        <p>Alyona Alyona & Jerry Heil</p>
-      </a>
-
-      <a href="Estonia2025.html" class="card">
-        <h4>Estonia</h4>
-        <p>Tommy Cash</p>
-      </a>
-
+  <section class="section">
+    <a class="all-winners-btn" style="margin: 0 0 1.5rem auto;" href="winners.html">All winners →</a>
+    <h3>Winners</h3>
+    <div class="winners-grid">
+      <div class="winner-card">
+        <img src="NetyFoto.png" alt="Croatia">
+        <p><strong>Croatia</strong></p>
+        <p>Baby Lasagna</p>
+        <p>Rim Tim Tagi Dim</p>
+      </div>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer>
     © 2025 Swevision. All rights reserved.
   </footer>
 
+  <script>
+    const slides = document.querySelector('.slides');
+    const dotsContainer = document.querySelector('.dots');
+    const totalSlides = slides.children.length;
+    let index = 0;
+
+    function createDots() {
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => moveToSlide(i));
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    function updateDots() {
+      [...dotsContainer.children].forEach(dot => dot.classList.remove('active'));
+      dotsContainer.children[index].classList.add('active');
+    }
+
+    function moveToSlide(i) {
+      index = i;
+      slides.style.transform = `translateX(-${index * 100}%)`;
+      updateDots();
+    }
+
+    function autoSlide() {
+      index = (index + 1) % totalSlides;
+      moveToSlide(index);
+    }
+
+    createDots();
+    setInterval(autoSlide, 5000);
+
+    function timeAgo(date) {
+      const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+      const intervals = [
+        { label: 'year', seconds: 31536000 },
+        { label: 'month', seconds: 2592000 },
+        { label: 'day', seconds: 86400 },
+        { label: 'hour', seconds: 3600 },
+        { label: 'minute', seconds: 60 },
+        { label: 'second', seconds: 1 }
+      ];
+      for (const interval of intervals) {
+        const count = Math.floor(seconds / interval.seconds);
+        if (count >= 1) {
+          return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
+        }
+      }
+      return 'just now';
+    }
+
+    document.querySelectorAll('time').forEach(t => {
+      const datetime = t.getAttribute('datetime');
+      t.textContent = timeAgo(datetime);
+    });
+  </script>
 </body>
 </html>
-
