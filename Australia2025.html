@@ -2,145 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Go-Jo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Go-Jo — Australia 2025</title>
+  <link rel="icon" href="Heart.png.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #000;
-      color: #fff;
+      color: white;
     }
 
-    /* Header */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
+      background: url('.png') center/cover no-repeat;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 1rem 2rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-    }
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #c084fc;
-      text-decoration: none;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 1.5rem;
-      font-weight: 500;
-    }
-    nav a:hover {
-      color: #d8b4fe;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
     }
 
-    img.header-photo {
+    .logo {
+      height: 60px;
+    }
+
+    nav a {
+      margin-left: 1.5rem;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .artist-banner img {
       width: 100%;
       height: auto;
-      display: block;
+      max-height: 500px;
+      object-fit: cover;
     }
 
     .container {
       display: flex;
       flex-wrap: wrap;
-      min-height: 100vh;
+      max-width: 1200px;
+      margin: auto;
+      padding: 2rem;
+      gap: 2rem;
     }
 
-    .sidebar {
-      background-color: #1e1e1e;
-      padding: 20px;
-      width: 300px;
-      box-sizing: border-box;
-    }
-    .sidebar a {
-      color: #c084fc;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .sidebar .section {
-      margin-bottom: 20px;
-    }
-
-    .main {
+    .info-box {
       flex: 1;
-      padding: 40px;
+      min-width: 280px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      color: #ddd;
     }
 
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 0;
+    .info-box h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
       color: #c084fc;
     }
-    .bold {
-      font-weight: bold;
+
+    .info-box p {
+      margin-bottom: 1rem;
+    }
+
+    .main-content {
+      flex: 2;
+      min-width: 300px;
+    }
+
+    .main-content h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .main-content p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      color: #ccc;
     }
 
     footer {
-      width: 100%;
-      background-color: #000;
-      text-align: center;
+      background: #111;
       padding: 2rem;
+      text-align: center;
       font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.6);
+      color: #aaa;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .main-content h1 {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
 <body>
 
   <!-- Header -->
-<header>
-  <a href="index.html" class="logo">Swevision</a>
-  <nav>
-    <a href="show.html">Show</a>
-    <a href="participants.html">Participants</a>
-    <a href="news.html">News</a>
-    <a href="gallery.html">Gallery</a>
-  </nav>
-</header>
+  <header>
+    <img src="SweLogo.png" alt="Swevision Logo" class="logo">
+    <nav>
+      <a href="vote.html">Vote!</a>
+      <a href="index.html">Home</a>
+      <a href="show.html">Show</a>
+      <a href="participants.html">Participants</a>
+      <a href="news.html">News</a>
+      <a href="gallery.html">Gallery</a>
+    </nav>
+  </header>
 
-  <!-- Header Image -->
-<img src="NetyFoto.png" alt="Artist Photo" class="header-photo">
+  <!-- Artist Banner -->
+  <div class="artist-banner">
+    <img src="image_2025-05-21_20-59-56.png" alt="Go-Jo Artist Image">
+  </div>
 
-  <!-- Content -->
+  <!-- Main Content -->
   <div class="container">
-    <div class="sidebar">
-      <div class="section"><strong>Country</strong><br><a href="#">Australia</a></div>
-      <div class="section"><strong>Event</strong><br><a href="#">Dalmatia 2025</a></div>
-      <div class="section"><strong>First Semi-Final</strong><br><a href="#">Swevision has not started yet.</a></div>
-      <div class="section"><strong>Grand Final</strong><br><a href="#">Swevision has not started yet.</a></div>
-      <div class="section"><strong>Song</strong><br>Milkshake Man</div>
-      <div class="section"><strong>Lyrics</strong><br>
-        Amy Sheppard / George Sheppard / <br>
-        Jason Bovino / Marty Zambotto<br>
-      </div>
-      <div class="section"><strong>Music</strong><br>
-        Amy Sheppard / George Sheppard / <br>
-        Jason Bovino / Marty Zambotto<br>
-      </div>
-      <div class="section"><strong>Pronouns</strong><br>He/Him</div>
-      <div class="section"><strong>Broadcaster</strong><br>
-  <img src="Australia_SBS_White.svg" alt="SBS Logo" style="width: 100px; margin-top: 10px;">
-</div>
-    </div>
+    <!-- Info Sidebar -->
+    <div class="info-box">
+      <h3>Country</h3>
+      <p>Australia</p>
 
-    <div class="main">
+      <h3>Event</h3>
+      <p>Dalmatia 2025</p>
+      <h3>Second Semi-Final</h3>
+      <p>Swevision has not started yet.</p>
+
+      <h3>Song</h3>
+      <p>Milkshake Man</p>
+
+      <h3>Lyrics</h3>
+      <p>Amy Sheppard / George Sheppard / Jason Bovino / Marty Zambotto</p>
+
+      <h3>Music</h3>
+      <p>Amy Sheppard / George Sheppard / Jason Bovino / Marty Zambotto</p>
+
+      <h3>Pronouns</h3>
+      <p>He/Him</p>
+
+  <h3>Broadcaster</h3>
+  <img src="Australia_SBS_White.svg" alt="SBS Logo" style="width: 100px; margin-top: 0.5rem;">
+</div>
+
+    <!-- Bio Section -->
+    <div class="main-content">
       <h1>Go-Jo</h1>
-      <p class="bold">Go-Jo is the music project of artist Marty Zambotto,</p>
-      <p>The magnetic musician, who can play guitar and unicycle at the same time, is now based in Sydney after being raised off-grid in rural Western Australia. </p>
-      <p>A social media powerhouse, Go-Jo has amassed over 1.4 million followers across TikTok, YouTube and Instagram. In 2023, Go-Jo was the 9th most streamed Australian artist in the world. He’s toured across Australia, Europe, United States and Southeast Asia, and shared the stage with some of the biggest artists in the world.</p>
-      <p>You may well have heard Go-Jo's previous hit single Mrs. Hollywood, after it was shared around the world at an incredible speed, with over 60 million digital streams and one billion views across all platforms.</p>
+      <p><strong>Go-Jo</strong> is the music project of artist Marty Zambotto.</p>
+      <p>
+        The magnetic musician, who can play guitar and unicycle at the same time, is now based in Sydney after being raised off-grid in rural Western Australia.
+      </p>
+      <p>
+        A social media powerhouse, Go-Jo has amassed over 1.4 million followers across TikTok, YouTube and Instagram. In 2023, Go-Jo was the 9th most streamed Australian artist in the world. He’s toured across Australia, Europe, United States and Southeast Asia, and shared the stage with some of the biggest artists in the world.
+      </p>
+      <p>
+        You may well have heard Go-Jo's previous hit single <em>Mrs. Hollywood</em>, after it was shared around the world at an incredible speed, with over 60 million digital streams and one billion views across all platforms.
+      </p>
     </div>
   </div>
 
