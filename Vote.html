@@ -5,11 +5,19 @@
   <title>Vote — Swevision 2025</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
       margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
       background-color: #000;
       color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
@@ -45,30 +53,38 @@
     }
 
     footer {
-      width: 100%;
       background-color: #000;
       text-align: center;
       padding: 2rem;
       font-size: 0.9rem;
       color: rgba(255, 255, 255, 0.6);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: auto;
     }
 
     .container {
+      flex: 1;
       padding: 2rem;
       text-align: center;
     }
 
-    #countdown, #progress-container {
-      margin: 2rem 0;
+    h1 {
+      color: #c084fc;
+    }
+
+    #countdown {
+      font-size: 1.2rem;
+      margin-top: 1rem;
     }
 
     #progress-container {
       width: 100%;
+      max-width: 600px;
       height: 20px;
       background-color: #333;
       border-radius: 10px;
       overflow: hidden;
+      margin: 1rem auto;
     }
 
     #progress-bar {
@@ -76,6 +92,13 @@
       width: 0%;
       background-color: #22c55e;
       transition: width 1s linear;
+    }
+
+    #progress-label {
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #a3e635;
     }
 
     iframe {
@@ -91,8 +114,19 @@
       display: block;
     }
 
-    h1 {
-      color: #c084fc;
+    .back-button {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.7rem 1.2rem;
+      background-color: #c084fc;
+      color: black;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+
+    .back-button:hover {
+      background-color: #a855f7;
     }
   </style>
 </head>
@@ -113,15 +147,18 @@
   <div class="container">
     <h1>Voting</h1>
     <p id="status-text">Voting will open soon!</p>
-
     <div id="countdown"></div>
 
+    <div id="progress-label" class="hidden">Шкала до закрытия голосования</div>
     <div id="progress-container" class="hidden">
       <div id="progress-bar"></div>
     </div>
 
+    <a href="index.html" class="back-button hidden" id="back-btn">← Вернуться на главную</a>
+
     <div id="vote-form" class="hidden">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScIZX0eM3n8cdbFMCNpLCLnwu9HtXTOK0aJYOXCz18-bGT4gA/viewform?embedded=true" width="640" height="1090">Loading…</iframe>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScIZX0eM3n8cdbFMCNpLCLnwu9HtXTOK0aJYOXCz18-bGT4gA/viewform?embedded=true"
+        width="640" height="1090">Loading…</iframe>
     </div>
   </div>
 
@@ -132,43 +169,61 @@
 
   <!-- Script -->
   <script>
-    const voteStart = new Date("2025-05-21T16:37:00"); // Change to your desired start time
-    const voteEnd = new Date(voteStart.getTime() + 30 * 60 * 1000); // 30 minutes after start
+    const voteStart = new Date("2025-05-21T16:50:00"); // дата и время начала голосования
+    const voteEnd = new Date(voteStart.getTime() + 60 * 60 * 1000); // 1 час длительность
 
     const countdownEl = document.getElementById("countdown");
     const statusText = document.getElementById("status-text");
     const formEl = document.getElementById("vote-form");
     const progressEl = document.getElementById("progress-container");
+    const progressLabel = document.getElementById("progress-label");
     const progressBar = document.getElementById("progress-bar");
+    const backBtn = document.getElementById("back-btn");
+
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, "0");
+      const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, "0");
+      const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+      return `${hours}:${minutes}:${seconds}`;
+    }
 
     function updateTimer() {
       const now = new Date();
 
       if (now < voteStart) {
         const diff = voteStart - now;
-        const minutes = Math.floor(diff / 60000);
-        const seconds = Math.floor((diff % 60000) / 1000);
-        countdownEl.textContent = `Voting opens in ${minutes}m ${seconds}s`;
+        countdownEl.textContent = `Voting opens in ${formatTime(diff)}`;
+        statusText.textContent = "Voting will open soon!";
       } else if (now >= voteStart && now <= voteEnd) {
-        countdownEl.textContent = `Voting is now open!`;
+        const total = voteEnd - voteStart;
+        const elapsed = now - voteStart;
+        const remaining = voteEnd - now;
+
+        countdownEl.textContent = `Voting ends in ${formatTime(remaining)}`;
         statusText.textContent = "Vote now! Time is running...";
         formEl.classList.remove("hidden");
         progressEl.classList.remove("hidden");
+        progressLabel.classList.remove("hidden");
+        backBtn.classList.remove("hidden");
 
-        const total = voteEnd - voteStart;
-        const elapsed = now - voteStart;
         const percentage = Math.min(100, (elapsed / total) * 100);
         progressBar.style.width = percentage + "%";
 
-        if (percentage >= 100) {
+        if (remaining <= 0) {
           statusText.textContent = "Voting has ended.";
           formEl.classList.add("hidden");
+          progressEl.classList.add("hidden");
+          progressLabel.classList.add("hidden");
+          countdownEl.textContent = "";
         }
       } else {
-        countdownEl.textContent = "";
         statusText.textContent = "Voting has ended.";
+        countdownEl.textContent = "";
         formEl.classList.add("hidden");
         progressEl.classList.add("hidden");
+        progressLabel.classList.add("hidden");
+        backBtn.classList.remove("hidden");
       }
     }
 
