@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Go-Jo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #c084fc;
+      text-decoration: none;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: #d8b4fe;
+    }
+
+    img.header-photo {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background-color: #1e1e1e;
+      padding: 20px;
+      width: 300px;
+      box-sizing: border-box;
+    }
+    .sidebar a {
+      color: #c084fc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .sidebar .section {
+      margin-bottom: 20px;
+    }
+
+    .main {
+      flex: 1;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 0;
+      color: #c084fc;
+    }
+    .bold {
+      font-weight: bold;
+    }
+
+    footer {
+      width: 100%;
+      background-color: #000;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+<header>
+  <a href="index.html" class="logo">Swevision</a>
+  <nav>
+    <a href="show.html">Show</a>
+    <a href="participants.html">Participants</a>
+    <a href="news.html">News</a>
+    <a href="gallery.html">Gallery</a>
+  </nav>
+</header>
+
+  <!-- Header Image -->
+<img src="NetyFoto.png" alt="Artist Photo" class="header-photo">
+
+  <!-- Content -->
+  <div class="container">
+    <div class="sidebar">
+      <div class="section"><strong>Country</strong><br><a href="#">Austraia</a></div>
+      <div class="section"><strong>Event</strong><br><a href="#">Dalmatia 2025</a></div>
+      <div class="section"><strong>First Semi-Final</strong><br><a href="#">Swevision has not started yet.</a></div>
+      <div class="section"><strong>Grand Final</strong><br><a href="#">Swevision has not started yet.</a></div>
+      <div class="section"><strong>Song</strong><br>Milkshake Man</div>
+      <div class="section"><strong>Lyrics</strong><br>
+        Amy Sheppard / George Sheppard / <br>
+        Jason Bovino / Marty Zambotto<br>
+      </div>
+      <div class="section"><strong>Music</strong><br>
+        Amy Sheppard / George Sheppard / <br>
+        Jason Bovino / Marty Zambotto<br>
+      </div>
+      <div class="section"><strong>Pronouns</strong><br>He/Him</div>
+      <div class="section"><strong>Broadcaster</strong><br>
+  <img src="Australia_SBS_White.svg" alt="SBS Logo" style="width: 100px; margin-top: 10px;">
+</div>
+    </div>
+
+    <div class="main">
+      <h1>Go-Jo</h1>
+      <p class="bold">Go-Jo is the music project of artist Marty Zambotto,</p>
+      <p>The magnetic musician, who can play guitar and unicycle at the same time, is now based in Sydney after being raised off-grid in rural Western Australia. </p>
+      <p>A social media powerhouse, Go-Jo has amassed over 1.4 million followers across TikTok, YouTube and Instagram. In 2023, Go-Jo was the 9th most streamed Australian artist in the world. He’s toured across Australia, Europe, United States and Southeast Asia, and shared the stage with some of the biggest artists in the world.</p>
+      <p>You may well have heard Go-Jo's previous hit single Mrs. Hollywood, after it was shared around the world at an incredible speed, with over 60 million digital streams and one billion views across all platforms.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Swevision. All rights reserved.
+  </footer>
+
+</body>
+</html>
