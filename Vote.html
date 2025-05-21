@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vote — Swevision 2025</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #c084fc;
+      text-decoration: none;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #d8b4fe;
+    }
+
+    footer {
+      width: 100%;
+      background-color: #000;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .container {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    #countdown, #progress-container {
+      margin: 2rem 0;
+    }
+
+    #progress-container {
+      width: 100%;
+      height: 20px;
+      background-color: #333;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #22c55e;
+      transition: width 1s linear;
+    }
+
+    iframe {
+      border: none;
+      margin-top: 2rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .visible {
+      display: block;
+    }
+
+    h1 {
+      color: #c084fc;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="index.html" class="logo">Swevision</a>
+    <nav>
+      <a href="show.html">Show</a>
+      <a href="participants.html">Participants</a>
+      <a href="news.html">News</a>
+      <a href="gallery.html">Gallery</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>Voting</h1>
+    <p id="status-text">Voting will open soon!</p>
+
+    <div id="countdown"></div>
+
+    <div id="progress-container" class="hidden">
+      <div id="progress-bar"></div>
+    </div>
+
+    <div id="vote-form" class="hidden">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScIZX0eM3n8cdbFMCNpLCLnwu9HtXTOK0aJYOXCz18-bGT4gA/viewform?embedded=true" width="640" height="1090">Loading…</iframe>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Swevision. All rights reserved.
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const voteStart = new Date("2025-05-21T16:25:00"); // Change to your desired start time
+    const voteEnd = new Date(voteStart.getTime() + 30 * 60 * 1000); // 30 minutes after start
+
+    const countdownEl = document.getElementById("countdown");
+    const statusText = document.getElementById("status-text");
+    const formEl = document.getElementById("vote-form");
+    const progressEl = document.getElementById("progress-container");
+    const progressBar = document.getElementById("progress-bar");
+
+    function updateTimer() {
+      const now = new Date();
+
+      if (now < voteStart) {
+        const diff = voteStart - now;
+        const minutes = Math.floor(diff / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
+        countdownEl.textContent = `Voting opens in ${minutes}m ${seconds}s`;
+      } else if (now >= voteStart && now <= voteEnd) {
+        countdownEl.textContent = `Voting is now open!`;
+        statusText.textContent = "Vote now! Time is running...";
+        formEl.classList.remove("hidden");
+        progressEl.classList.remove("hidden");
+
+        const total = voteEnd - voteStart;
+        const elapsed = now - voteStart;
+        const percentage = Math.min(100, (elapsed / total) * 100);
+        progressBar.style.width = percentage + "%";
+
+        if (percentage >= 100) {
+          statusText.textContent = "Voting has ended.";
+          formEl.classList.add("hidden");
+        }
+      } else {
+        countdownEl.textContent = "";
+        statusText.textContent = "Voting has ended.";
+        formEl.classList.add("hidden");
+        progressEl.classList.add("hidden");
+      }
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  </script>
+
+</body>
+</html>
