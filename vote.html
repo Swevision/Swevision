@@ -618,7 +618,7 @@
         <div class="staff-modal-content staff-login-modal-content">
             <button class="close-btn" id="close-login-modal-btn">&times;</button>
             <h3 id="staff-login-heading" data-localize="staffLoginHeading">Staff Login</h3>
-            <input type="text" id="staff-username" data-localize-placeholder="usernamePlaceholder" placeholder="Username">
+            <input type="text" id="staff-email" data-localize-placeholder="emailPlaceholder" placeholder="Email">
             <input type="password" id="staff-password" data-localize-placeholder="passwordPlaceholder" placeholder="Password">
             <button id="staff-login-submit-btn" data-localize="loginButton" class="login-submit-btn">Login</button>
             <p id="login-error-message" class="login-error-message" data-localize="loginError">Invalid credentials</p>
@@ -634,8 +634,29 @@
         </div>
     </div>
 
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    <script>
+        // Your web app's Firebase configuration
+        // ИНИЦИАЛИЗАЦИЯ Firebase SDK
+        const firebaseConfig = {
+          apiKey: "AIzaSyBR1_6s1fUYIMshLSIWlnBgxifMYbQMSbU", // Твой Web API Key
+          authDomain: "swevote-ef32b.firebaseapp.com",
+          projectId: "swevote-ef32b",
+          storageBucket: "swevote-ef32b.appspot.com",
+          messagingSenderId: "1065504534995", // Твой Project number
+          appId: "1:1065504534995:web:..." // !!! ОБЯЗАТЕЛЬНО ЗАМЕНИ НА ТВОЙ РЕАЛЬНЫЙ appID ИЗ НАСТРОЕК ПРОЕКТА FIREBASE !!!
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+
         const firstSemiFinalDate = new Date('2025-05-24T18:09:00Z'); // Пример даты и времени (UTC)
         const votingStartTimeOffset = 0; // Голосование начинается одновременно с полуфиналом
         const votingDuration = 30 * 60 * 1000; // Длительность голосования 30 минут
@@ -671,7 +692,7 @@
         const staffBtn = document.getElementById('staff-btn');
         const staffLoginModal = document.getElementById('staff-login-modal');
         const closeLoginModalBtn = document.getElementById('close-login-modal-btn');
-        const staffUsernameInput = document.getElementById('staff-username');
+        const staffEmailInput = document.getElementById('staff-email'); // Изменено на email
         const staffPasswordInput = document.getElementById('staff-password');
         const staffLoginSubmitBtn = document.getElementById('staff-login-submit-btn');
         const loginErrorMessage = document.getElementById('login-error-message');
@@ -680,12 +701,12 @@
         const closeResultsModalBtn = document.getElementById('close-results-modal-btn');
         const resultsDataContainer = document.getElementById('results-data-container');
 
-        const userParts = [ "piso", "iahd", "sad", "xasp", "dmn", "bvhj"];
-        const HIDDEN_STAFF_USERNAME = userParts.join("");
-
-        const passParts = [ "Apple", "Cat", "PhoneS", "ubwayw", "eryBest", "MeowR", "arGaG", "aHaha", "Par", "Cat"];
-        const HIDDEN_STAFF_PASSWORD = passParts.join("");
-
+        // !!! ВНИМАНИЕ: НЕ ИСПОЛЬЗУЙТЕ ТАК В ПРОДАКШЕНЕ !!!
+        // Это ОЧЕНЬ небезопасно. Используйте Firebase Authentication users
+        // для управления доступом к панели персонала.
+        const STAFF_EMAIL = 'sllideee@icloud.cim'; // Твой тестовый email для Firebase Auth
+        const STAFF_PASSWORD = 'YourSecureStaffPassword'; // Пароль, который ты задал для этого пользователя в Firebase Auth
+        // !!! КОНЕЦ ВНИМАНИЯ ПО БЕЗОПАСНОСТИ !!!
 
         let totalVotes = 0;
         const maxVotes = 20;
@@ -702,7 +723,77 @@
             { id: 'hrv', country: 'Croatia', artist: 'Baby Lasagna', song: 'Rim Tim Tagi Dim', image: 'NetyFoto.png' },
         ];
 
-        // --- Локализация ---
+        // --- Локализация (только структура, добавь свои переводы) ---
+        const translations = {
+            en: {
+                title: 'Swevision 2025 - Vote',
+                language: 'Language',
+                country: 'Country',
+                staff: 'Staff',
+                timerHeadingPre: 'There is still time before the start of the first semi-final:',
+                eventMessage: 'Voting is currently closed.',
+                votingStatus: 'Please wait for the voting to open.',
+                votingHeading: 'Vote for your favorite!',
+                checkoutButton: 'Check out',
+                menuTitle: 'Select language or country',
+                menuDescription: 'Choose your preferred language or your country to vote from.',
+                confirmVotesHeading: 'Confirm your votes',
+                confirmationCountryInfo: 'You are voting from: {country_name}',
+                sendVotesButton: 'Send votes!',
+                thankYouMessage: 'Thank you for voting!',
+                thankYouSubMessage: 'Expect results soon.',
+                staffLoginHeading: 'Staff Login',
+                emailPlaceholder: 'Email',
+                passwordPlaceholder: 'Password',
+                loginButton: 'Login',
+                loginError: 'Invalid email or password.',
+                votingResultsHeading: 'Voting Results',
+                footerText: '© 2025 Swevision. All rights reserved.',
+                votingStartsIn: 'Voting starts in:',
+                votingEndsIn: 'Voting ends in:',
+                votingClosed: 'Voting is closed.',
+                votes: 'votes',
+                countryColumn: 'Country',
+                artistColumn: 'Artist',
+                songColumn: 'Song',
+                totalVotesColumn: 'Total Votes'
+            },
+            ru: {
+                title: 'Swevision 2025 - Голосование',
+                language: 'Язык',
+                country: 'Страна',
+                staff: 'Персонал',
+                timerHeadingPre: 'До начала первого полуфинала осталось:',
+                eventMessage: 'Голосование в данный момент закрыто.',
+                votingStatus: 'Пожалуйста, дождитесь открытия голосования.',
+                votingHeading: 'Проголосуйте за фаворита!',
+                checkoutButton: 'Проверить голоса',
+                menuTitle: 'Выберите язык или страну',
+                menuDescription: 'Выберите предпочитаемый язык или вашу страну для голосования.',
+                confirmVotesHeading: 'Подтвердите свои голоса',
+                confirmationCountryInfo: 'Вы голосуете из: {country_name}',
+                sendVotesButton: 'Отправить голоса!',
+                thankYouMessage: 'Спасибо за ваш голос!',
+                thankYouSubMessage: 'Ожидайте результатов в ближайшее время.',
+                staffLoginHeading: 'Вход для персонала',
+                emailPlaceholder: 'Электронная почта',
+                passwordPlaceholder: 'Пароль',
+                loginButton: 'Войти',
+                loginError: 'Неверный адрес эл. почты или пароль.',
+                votingResultsHeading: 'Результаты голосования',
+                footerText: '© 2025 Swevision. Все права защищены.',
+                votingStartsIn: 'Голосование начнется через:',
+                votingEndsIn: 'Голосование закончится через:',
+                votingClosed: 'Голосование закрыто.',
+                votes: 'голосов',
+                countryColumn: 'Страна',
+                artistColumn: 'Артист',
+                songColumn: 'Песня',
+                totalVotesColumn: 'Всего голосов'
+            }
+            // Добавьте другие языки (sv, fr, de)
+        };
+
         const languages = [
             { code: 'en', name: 'English' },
             { code: 'ru', name: 'Русский' },
@@ -714,7 +805,6 @@
         const countries = [
             { code: 'al', name: 'Albania', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Flag_of_Albania.svg/30px-Flag_of_Albania.svg.png' },
             { code: 'am', name: 'Armenia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Flag_of_Armenia.svg/30px-Flag_of_Armenia.svg.png' },
-            // ... (остальные страны из вашего примера)
             { code: 'au', name: 'Australia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/30px-Flag_of_Australia_%28converted%29.svg.png' },
             { code: 'at', name: 'Austria', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/30px-Flag_of_Austria.svg.png' },
             { code: 'az', name: 'Azerbaijan', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Flag_of_Azerbaijan.svg/30px-Flag_of_Azerbaijan.svg.png' },
@@ -749,692 +839,441 @@
             { code: 'se', name: 'Sweden', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Flag_of_Sweden.svg/30px-Flag_of_Sweden.svg.png' },
             { code: 'ch', name: 'Switzerland', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Switzerland.svg/30px-Flag_of_Switzerland.svg.png' },
             { code: 'ua', name: 'Ukraine', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Ukraine.svg/30px-Flag_of_Ukraine.svg.png' },
-            { code: 'gb', name: 'United Kingdom', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Flag_of_the_United_Kingdom.svg/30px-Flag_of_the_United_Kingdom.svg.png' },
-            { code: 'ru', name: 'Russia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/30px-Flag_of_Russia.svg.png' },
-            { code: 'row', name: 'Rest of the world', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Flag_of_the_United_Nations.svg/30px-Flag_of_the_United_Nations.svg.png' }
+            { code: 'gb', name: 'United Kingdom', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Great_Britain_%281707%E2%80%931800%29.svg/30px-Flag_of_Great_Britain_%281707%E2%80%931800%29.svg.png' },
         ];
 
-        const translations = {
-            en: {
-                title: 'Swevision 2025 - Vote', language: 'Language', country: 'Country',
-                timerHeadingPre: 'There is still time before the start of the first semi-final:',
-                timerHeadingActive: 'Choose your favorite.', timerHeadingClosed: 'Voting has closed!',
-                eventMessagePre: '', eventMessageVotingSoon: 'Expect us to open voting very soon.',
-                eventMessageVotingClosed: 'Thank you for your participation.',
-                votingStatusClosed: 'Results will be announced shortly.',
-                checkoutButton: 'Check out',
-                menuTitleLanguage: 'Change Language', menuTitleCountry: 'Change Voting Region',
-                menuDescriptionCountry: 'Please make sure that you select the correct voting region to get the right instructions and to prevent issues when trying to submit your votes.',
-                confirmVotesHeading: 'Confirm your votes', confirmationCountryInfo: 'You are voting from: ',
-                sendVotesButton: 'Send votes!', thankYouMessage: 'Thank you for voting!',
-                thankYouSubMessage: 'Expect results soon.', footerText: '© 2025 Swevision. All rights reserved.',
-                maxVotesAlert: 'You can only vote for a maximum of 20 times in total.',
-                errorSendingVotes: 'An error occurred while sending your votes. Please try again.',
-                // Новые переводы для Staff
-                staff: 'Staff', staffLoginHeading: 'Staff Login', usernamePlaceholder: 'Username',
-                passwordPlaceholder: 'Password', loginButton: 'Login',
-                loginError: 'Invalid credentials. Please try again.',
-                votingResultsHeading: 'Voting Results',
-                participantColumnHeader: 'Participant (Artist / Country)', songColumnHeader: 'Song',
-                votesColumnHeader: 'Votes', noVotesYet: 'No votes have been cast yet.'
-            },
-            ru: {
-                title: 'Швевижн 2025 - Голосование', language: 'Язык', country: 'Страна',
-                timerHeadingPre: 'До начала первого полуфинала осталось:',
-                timerHeadingActive: 'Выберите своих фаворитов.', timerHeadingClosed: 'Голосование завершено!',
-                eventMessagePre: '', eventMessageVotingSoon: 'Ожидайте открытия голосования очень скоро.',
-                eventMessageVotingClosed: 'Спасибо за ваше участие.',
-                votingStatusClosed: 'Результаты будут объявлены в скором времени.',
-                checkoutButton: 'Оформить',
-                menuTitleLanguage: 'Сменить язык', menuTitleCountry: 'Выбрать регион голосования',
-                menuDescriptionCountry: 'Пожалуйста, убедитесь, что вы выбрали правильный регион голосования, чтобы получить верные инструкции и избежать проблем при отправке голосов.',
-                confirmVotesHeading: 'Подтвердите ваши голоса', confirmationCountryInfo: 'Вы голосуете из: ',
-                sendVotesButton: 'Отправить голоса!', thankYouMessage: 'Спасибо за ваш голос!',
-                thankYouSubMessage: 'Ожидайте результатов скоро.', footerText: '© 2025 Швевижн. Все права защищены.',
-                maxVotesAlert: 'Вы можете отдать не более 20 голосов в общей сложности.',
-                errorSendingVotes: 'Произошла ошибка при отправке ваших голосов. Пожалуйста, попробуйте еще раз.',
-                 // Новые переводы для Staff
-                staff: 'Персонал', staffLoginHeading: 'Вход для персонала', usernamePlaceholder: 'Имя пользователя',
-                passwordPlaceholder: 'Пароль', loginButton: 'Войти',
-                loginError: 'Неверные учетные данные. Пожалуйста, попробуйте еще раз.',
-                votingResultsHeading: 'Результаты голосования',
-                participantColumnHeader: 'Участник (Артист / Страна)', songColumnHeader: 'Песня',
-                votesColumnHeader: 'Голоса', noVotesYet: 'Голоса еще не поданы.'
-            },
-            sv: {
-                title: 'Swevision 2025 - Röstning', language: 'Språk', country: 'Land',
-                timerHeadingPre: 'Tid kvar till den första semifinalen:',
-                timerHeadingActive: 'Välj dina favoriter.', timerHeadingClosed: 'Röstningen har stängt!',
-                eventMessagePre: '', eventMessageVotingSoon: 'Vi förväntar oss att öppna röstningen snart.',
-                eventMessageVotingClosed: 'Tack för ditt deltagande.',
-                votingStatusClosed: 'Resultat kommer att meddelas inom kort.',
-                checkoutButton: 'Kassa',
-                menuTitleLanguage: 'Byt språk', menuTitleCountry: 'Välj röstningsregion',
-                menuDescriptionCountry: 'Se till att du väljer rätt röstningsregion för att få korrekta instruktioner och förhindra problem när du försöker skicka in dina röster.',
-                confirmVotesHeading: 'Bekräfta dina röster', confirmationCountryInfo: 'Du röstar från: ',
-                sendVotesButton: 'Skicka röster!', thankYouMessage: 'Tack för att du röstade!',
-                thankYouSubMessage: 'Resultat kommer snart.', footerText: '© 2025 Swevision. Alla rättigheter förbehållna.',
-                maxVotesAlert: 'Du kan bara rösta maximalt 20 gånger totalt.',
-                errorSendingVotes: 'Ett fel inträffade när dina röster skickades. Försök igen.',
-                // Новые переводы для Staff
-                staff: 'Personal', staffLoginHeading: 'Personalinloggning', usernamePlaceholder: 'Användarnamn',
-                passwordPlaceholder: 'Lösenord', loginButton: 'Logga in',
-                loginError: 'Ogiltiga uppgifter. Försök igen.',
-                votingResultsHeading: 'Röstningsresultat',
-                participantColumnHeader: 'Deltagare (Artist / Land)', songColumnHeader: 'Låt',
-                votesColumnHeader: 'Röster', noVotesYet: 'Inga röster har lagts ännu.'
-            }
-        };
 
-        // --- Функции локализации ---
-        function getTranslation(key, lang = null) {
-            const currentLang = lang || localStorage.getItem('selectedLanguage') || 'en';
-            return translations[currentLang]?.[key] || translations['en']?.[key] || key;
-        }
+        let currentLanguage = localStorage.getItem('lang') || 'en';
+        let currentCountry = JSON.parse(localStorage.getItem('country')) || null;
 
-        function localizePage() {
-            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-            document.querySelectorAll('[data-localize]').forEach(el => {
-                const key = el.dataset.localize;
-                if (translations[currentLang] && translations[currentLang][key]) {
-                    if (el.tagName === 'TITLE' || el.hasAttribute('data-localize-value')) {
-                        el.textContent = translations[currentLang][key];
-                    } else if (el.hasAttribute('placeholder') && el.dataset.localizePlaceholder) {
-                         el.placeholder = translations[currentLang][el.dataset.localizePlaceholder] || translations['en'][el.dataset.localizePlaceholder] || el.dataset.localizePlaceholder;
-                    }
-                     else {
-                        el.innerHTML = translations[currentLang][key]; // Используем innerHTML для поддержки тегов в переводах (например, <br>)
-                    }
-                } else if (translations['en'] && translations['en'][key]) { // Fallback to English
-                     if (el.tagName === 'TITLE' || el.hasAttribute('data-localize-value')) {
-                        el.textContent = translations['en'][key];
-                    } else if (el.hasAttribute('placeholder') && el.dataset.localizePlaceholder) {
-                         el.placeholder = translations['en'][el.dataset.localizePlaceholder] || el.dataset.localizePlaceholder;
-                    }
-                     else {
-                        el.innerHTML = translations['en'][key];
-                    }
+        function localizeHtml() {
+            document.querySelectorAll('[data-localize]').forEach(element => {
+                const key = element.getAttribute('data-localize');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
                 }
             });
-             document.querySelectorAll('[data-localize-placeholder]').forEach(el => {
-                const key = el.dataset.localizePlaceholder;
-                if (translations[currentLang] && translations[currentLang][key]) {
-                    el.placeholder = translations[currentLang][key];
-                } else if (translations['en'] && translations['en'][key]) {
-                    el.placeholder = translations['en'][key];
+            document.querySelectorAll('[data-localize-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-localize-placeholder');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.placeholder = translations[currentLanguage][key];
                 }
             });
-
-            // Обновление заголовка и сообщений таймера отдельно, т.к. они могут меняться динамически
-            updateTimerAndMessagesContent();
-        }
-
-        function updateTimerAndMessagesContent() {
-            const now = new Date();
-            const timeLeft = firstSemiFinalDate - now;
-            const votingEndTime = new Date(firstSemiFinalDate.getTime() + votingStartTimeOffset + votingDuration);
-            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-
-            if (timeLeft > 0) { // До начала события
-                timerTitleEl.textContent = getTranslation('timerHeadingPre', currentLang);
-                eventMessageEl.textContent = getTranslation('eventMessagePre', currentLang);
-                votingStatusEl.textContent = '';
-            } else if (now >= firstSemiFinalDate && now < votingEndTime) { // Во время голосования
-                timerTitleEl.textContent = getTranslation('timerHeadingActive', currentLang);
-                eventMessageEl.textContent = ''; // Можно добавить сообщение "Голосование открыто!"
-                // votingStatusEl.textContent = ''; // Обновляется таймером голосования // Закомментировано, чтобы не перезаписывать оставшееся время
-            } else { // После окончания голосования
-                timerTitleEl.textContent = getTranslation('timerHeadingClosed', currentLang);
-                eventMessageEl.textContent = getTranslation('eventMessageVotingClosed', currentLang);
-                votingStatusEl.textContent = getTranslation('votingStatusClosed', currentLang);
-            }
-
-            if (votingHeading) { // Обновление заголовка секции голосования
-                if (now >= firstSemiFinalDate && now < votingEndTime) {
-                     votingHeading.textContent = getTranslation('timerHeadingActive', currentLang);
-                } else if (now < firstSemiFinalDate) {
-                    votingHeading.textContent = ''; // Или "Голосование скоро начнется"
-                } else {
-                    votingHeading.textContent = getTranslation('timerHeadingClosed', currentLang);
-                }
-            }
-        }
-
-
-        function setLanguage(langCode) {
-            localStorage.setItem('selectedLanguage', langCode);
-            document.documentElement.lang = langCode;
-            localizePage();
-            displayParticipants(); // Перерисовать участников с новым языком, если их описание локализовано
-            updateCheckoutButton(); // Обновить кнопку Checkout
-            // Если модальное окно подтверждения открыто, обновить его
-            if (confirmationModal.style.display === 'flex') {
-                populateConfirmationModal();
-            }
-        }
-
-        function setSelectedCountry(countryData) {
-            selectedCountry = countryData;
-            localStorage.setItem('selectedVotingCountry', JSON.stringify(countryData));
-            // Обновить информацию о стране в UI, если нужно
-            if (countryBtn.querySelector('span')) {
-                 countryBtn.querySelector('span').textContent = `${getTranslation('country')}: ${countryData.name}`;
-            }
-            if (confirmationModal.style.display === 'flex') {
-                populateConfirmationModal();
-            }
-            localizePage(); // Для обновления текста кнопки и других элементов
-        }
-
-
-        // --- Логика таймера и голосования ---
-        function updateCountdown() {
-            const now = new Date();
-            let timeLeft = firstSemiFinalDate - now;
-            let votingTimeLeft;
-            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-
-
-            if (timeLeft <= 0) { // Событие началось или уже прошло
-                const votingEndTime = new Date(firstSemiFinalDate.getTime() + votingStartTimeOffset + votingDuration);
-                votingTimeLeft = votingEndTime - now;
-
-                if (votingTimeLeft > 0) { // Голосование активно
-                    if (!votingSection.classList.contains('active')) {
-                        votingSection.classList.add('active');
-                        votingProgressContainer.style.display = 'block';
-                        displayParticipants(); // Показать участников для голосования
-                        updateTimerAndMessagesContent(); // Обновит timerTitleEl и eventMessageEl
-                    }
-
-                    const secondsTotal = Math.floor(votingDuration / 1000);
-                    const secondsLeft = Math.floor(votingTimeLeft / 1000);
-                    const progressPercentage = ((secondsTotal - secondsLeft) / secondsTotal) * 100;
-                    votingProgressBar.style.width = `${progressPercentage}%`;
-
-                    // const days = Math.floor(votingTimeLeft / (1000 * 60 * 60 * 24)); // Дни не нужны для 30 минут
-                    const hours = Math.floor((votingTimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((votingTimeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((votingTimeLeft % (1000 * 60)) / 1000);
-
-                    countdownTimerEl.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                    // Обновляем title и message если они еще не установлены для активного голосования
-                    if (timerTitleEl.textContent !== getTranslation('timerHeadingActive', currentLang)) {
-                        updateTimerAndMessagesContent();
-                    }
-                    votingStatusEl.textContent = `${getTranslation('timerHeadingActive', currentLang)} ${getTranslation('timeLeft', currentLang) || 'Time left'}: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-
-                } else { // Голосование завершено
-                    countdownTimerEl.textContent = "00:00:00";
-                    votingSection.classList.remove('active');
-                    participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('timerHeadingClosed')}</p>`; // Очистить сетку или показать сообщение
-                    checkoutBtn.style.display = 'none';
-                    votingProgressContainer.style.display = 'none';
-                    updateTimerAndMessagesContent();
-                }
-            } else { // До начала события
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                countdownTimerEl.textContent = `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                votingSection.classList.remove('active');
-                participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('eventMessageVotingSoon')}</p>`;
-                checkoutBtn.style.display = 'none';
-                votingProgressContainer.style.display = 'none';
-                 updateTimerAndMessagesContent();
-            }
-        }
-
-        // --- Функции для отображения участников и голосования ---
-        function createParticipantCard(participantData) {
-            const card = document.createElement('div');
-            card.classList.add('participant-card');
-            card.dataset.id = participantData.id;
-
-            const img = document.createElement('img');
-            img.src = participantData.image;
-            img.alt = `${participantData.artist} - ${participantData.country}`;
-            img.onerror = () => { img.src = 'NetyFoto.png'; }; // Запасное изображение
-
-            const artistName = document.createElement('h4');
-            artistName.textContent = participantData.artist;
-
-            const songName = document.createElement('p');
-            songName.textContent = participantData.song;
-
-            const countryName = document.createElement('p');
-            countryName.style.fontSize = '0.8em';
-            countryName.style.color = '#999';
-            countryName.textContent = participantData.country;
-
-
-            const voteControls = document.createElement('div');
-            voteControls.classList.add('vote-controls');
-
-            const minusBtn = document.createElement('button');
-            minusBtn.textContent = '-';
-            minusBtn.disabled = !(selectedParticipants[participantData.id]?.votes > 0);
-
-
-            const voteCountSpan = document.createElement('span');
-            voteCountSpan.textContent = selectedParticipants[participantData.id]?.votes || 0;
-
-            const plusBtn = document.createElement('button');
-            plusBtn.textContent = '+';
-             plusBtn.disabled = totalVotes >= maxVotes;
-
-
-            minusBtn.addEventListener('click', () => updateVote(participantData.id, -1));
-            plusBtn.addEventListener('click', () => updateVote(participantData.id, 1));
-
-            voteControls.appendChild(minusBtn);
-            voteControls.appendChild(voteCountSpan);
-            voteControls.appendChild(plusBtn);
-
-            card.appendChild(img);
-            card.appendChild(artistName);
-            card.appendChild(songName);
-            card.appendChild(countryName);
-            card.appendChild(voteControls);
-            return card;
-        }
-
-        function displayParticipants() {
-            participantGrid.innerHTML = ''; // Очистить перед добавлением
-            const now = new Date();
-            const votingEndTime = new Date(firstSemiFinalDate.getTime() + votingStartTimeOffset + votingDuration);
-            const isVotingActive = (now >= firstSemiFinalDate && now < votingEndTime);
-
-            if (isVotingActive) {
-                participants.forEach(p => {
-                    const card = createParticipantCard(p);
-                    participantGrid.appendChild(card);
-                });
-                 updateAllParticipantCards(); // Убедимся, что состояние кнопок +/- и счетчиков верное
-            } else if (now < firstSemiFinalDate) {
-                 participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('eventMessageVotingSoon')}</p>`;
+            // Update confirmation country info dynamically
+            if (currentCountry) {
+                const text = translations[currentLanguage].confirmationCountryInfo.replace('{country_name}', currentCountry.name);
+                confirmationCountryInfoEl.textContent = text;
             } else {
-                 participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('timerHeadingClosed')}</p>`;
+                confirmationCountryInfoEl.textContent = translations[currentLanguage].confirmationCountryInfo.replace('{country_name}', 'Not selected'); // Or a default message
             }
         }
 
-        function updateVote(participantId, change) {
-            const participantData = participants.find(p => p.id === participantId);
-            if (!participantData) return;
-
-            let currentVotesForParticipant = selectedParticipants[participantId]?.votes || 0;
-
-            if (change === 1 && totalVotes >= maxVotes) {
-                alert(getTranslation('maxVotesAlert'));
-                return;
-            }
-            if (change === -1 && currentVotesForParticipant <= 0) {
-                return;
-            }
-
-            currentVotesForParticipant += change;
-            totalVotes += change;
-
-            selectedParticipants[participantId] = {
-                id: participantId,
-                name: participantData.artist,
-                song: participantData.song,
-                country_name: participantData.country, // Сохраняем название страны
-                votes: currentVotesForParticipant,
-                image: participantData.image
-            };
-
-            if (currentVotesForParticipant === 0) {
-                delete selectedParticipants[participantId];
-            }
-            updateParticipantCard(participantId);
-            updateAllPlusButtonsState();
-            updateCheckoutButton();
-
-            // Обновление результатов в реальном времени для Staff, если модальное окно открыто
-            if (staffResultsModal.style.display === 'flex') {
-                displayVotingResults();
-            }
-        }
-
-        function updateParticipantCard(participantId) {
-            const card = participantGrid.querySelector(`.participant-card[data-id="${participantId}"]`);
-            if (card) {
-                const voteCountSpan = card.querySelector('.vote-controls span');
-                const minusBtn = card.querySelector('.vote-controls button:first-child');
-
-                voteCountSpan.textContent = selectedParticipants[participantId]?.votes || 0;
-                minusBtn.disabled = !(selectedParticipants[participantId]?.votes > 0);
-            }
-        }
-
-        function updateAllPlusButtonsState() {
-            const allPlusButtons = participantGrid.querySelectorAll('.vote-controls button:last-child');
-            allPlusButtons.forEach(btn => {
-                btn.disabled = totalVotes >= maxVotes;
-            });
-        }
-
-        function updateAllParticipantCards() {
+        function renderParticipants() {
+            participantGrid.innerHTML = '';
             participants.forEach(p => {
-                if (participantGrid.querySelector(`.participant-card[data-id="${p.id}"]`)) {
-                     updateParticipantCard(p.id)
-                }
+                const card = document.createElement('div');
+                card.className = 'participant-card';
+                const currentVotes = selectedParticipants[p.id] ? selectedParticipants[p.id].votes : 0;
+
+                card.innerHTML = `
+                    <img src="${p.image}" alt="${p.artist}">
+                    <h4>${p.artist}</h4>
+                    <p>${p.song}</p>
+                    <p>${p.country}</p>
+                    <div class="vote-controls">
+                        <button data-id="${p.id}" data-action="decrease">-</button>
+                        <span id="votes-${p.id}">${currentVotes}</span>
+                        <button data-id="${p.id}" data-action="increase">+</button>
+                    </div>
+                `;
+                participantGrid.appendChild(card);
             });
-            updateAllPlusButtonsState();
         }
 
+        function updateVoteCount(id, change) {
+            const currentVotes = selectedParticipants[id] ? selectedParticipants[id].votes : 0;
+            const newVotes = currentVotes + change;
 
-        function updateCheckoutButton() {
+            if (newVotes < 0) return;
+
+            // Total votes check
+            if (totalVotes + change > maxVotes) {
+                alert(`You can only vote a maximum of ${maxVotes} times!`); // Localize this
+                return;
+            }
+
+            if (newVotes === 0 && selectedParticipants[id]) {
+                delete selectedParticipants[id];
+            } else {
+                selectedParticipants[id] = {
+                    ...participants.find(p => p.id === id),
+                    votes: newVotes
+                };
+            }
+
+            totalVotes += change;
+            document.getElementById(`votes-${id}`).textContent = newVotes;
+            updateCheckoutButtonVisibility();
+        }
+
+        function updateCheckoutButtonVisibility() {
             if (totalVotes > 0) {
                 checkoutBtn.style.display = 'block';
-                checkoutBtn.textContent = `${getTranslation('checkoutButton')} (${totalVotes}/${maxVotes})`;
             } else {
                 checkoutBtn.style.display = 'none';
             }
         }
 
-        // --- Функции для меню и модальных окон ---
-        function openMenu(type) {
-            overlay.style.display = 'block';
-            sideMenu.classList.add('open');
-            menuList.innerHTML = ''; // Очистить список
-            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const eventStartTime = firstSemiFinalDate.getTime();
+            const votingOpenTime = eventStartTime + votingStartTimeOffset;
+            const votingCloseTime = votingOpenTime + votingDuration;
 
-            if (type === 'language') {
-                menuTitle.textContent = getTranslation('menuTitleLanguage', currentLang);
-                menuDescription.textContent = '';
-                languages.forEach(lang => {
-                    const li = document.createElement('li');
-                    const a = document.createElement('a');
-                    a.href = '#';
-                    a.textContent = lang.name;
-                    a.onclick = (e) => {
-                        e.preventDefault();
-                        setLanguage(lang.code);
-                        closeSideMenu();
-                    };
-                    li.appendChild(a);
-                    menuList.appendChild(li);
-                });
-            } else if (type === 'country') {
-                menuTitle.textContent = getTranslation('menuTitleCountry', currentLang);
-                menuDescription.textContent = getTranslation('menuDescriptionCountry', currentLang);
-                countries.forEach(country => {
-                    const li = document.createElement('li');
-                    const a = document.createElement('a');
-                    a.href = '#';
-                    const flagImg = document.createElement('img');
-                    flagImg.src = country.flag;
-                    flagImg.alt = country.name;
-                    a.appendChild(flagImg);
-                    a.appendChild(document.createTextNode(country.name));
-                    a.onclick = (e) => {
-                        e.preventDefault();
-                        setSelectedCountry(country);
-                        closeSideMenu();
-                    };
-                    li.appendChild(a);
-                    menuList.appendChild(li);
-                });
+            let distance;
+            let message = '';
+            let subMessage = '';
+            let showProgressBar = false;
+            let progress = 0; // 0 to 100
+
+            if (now < votingOpenTime) {
+                // До начала голосования
+                distance = votingOpenTime - now;
+                message = translations[currentLanguage].votingStartsIn;
+                subMessage = translations[currentLanguage].votingStatus;
+                votingSection.style.display = 'none'; // Скрываем секцию голосования
+                timerTitleEl.textContent = translations[currentLanguage].timerHeadingPre;
+            } else if (now >= votingOpenTime && now <= votingCloseTime) {
+                // Голосование идет
+                distance = votingCloseTime - now;
+                message = translations[currentLanguage].votingEndsIn;
+                subMessage = 'Voting is open!'; // Localize this
+                votingSection.style.display = 'block'; // Показываем секцию голосования
+                votingHeading.textContent = translations[currentLanguage].votingHeading;
+                timerTitleEl.textContent = 'Time left for voting:'; // Localize this
+                showProgressBar = true;
+
+                const elapsedVotingTime = now - votingOpenTime;
+                progress = (elapsedVotingTime / votingDuration) * 100;
+                votingProgressBar.style.width = `${progress}%`;
+                votingProgressContainer.style.display = 'block';
+
+            } else {
+                // Голосование закрыто
+                distance = 0;
+                message = translations[currentLanguage].votingClosed;
+                subMessage = 'Voting is closed.'; // Localize this
+                votingSection.style.display = 'block';
+                votingHeading.textContent = translations[currentLanguage].votingHeading;
+                timerTitleEl.textContent = 'Voting has ended.'; // Localize this
+                votingProgressContainer.style.display = 'none'; // Скрываем прогресс-бар
             }
-            localizePage(); // Для обновления заголовков и описаний в меню
+
+            if (distance > 0) {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                countdownTimerEl.textContent =
+                    `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            } else {
+                countdownTimerEl.textContent = '00:00:00:00';
+            }
+
+            eventMessageEl.textContent = message;
+            votingStatusEl.textContent = subMessage;
+
+            if (showProgressBar) {
+                 votingProgressContainer.style.display = 'block';
+                 votingProgressBar.style.width = `${progress}%`;
+            } else {
+                 votingProgressContainer.style.display = 'none';
+            }
         }
 
-        function closeSideMenu() {
-            sideMenu.classList.remove('open');
-            if (confirmationModal.style.display !== 'flex' && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex') {
-                overlay.style.display = 'none';
+        // --- Firebase Firestore Functions ---
+
+        /**
+         * Saves a vote to Firestore.
+         * @param {string} userId - Unique ID of the user.
+         * @param {object} votes - An object where keys are participant IDs and values are vote counts.
+         * @param {object} countryInfo - The country from which the vote was cast.
+         */
+        async function saveVotesToFirestore(userId, votes, countryInfo) {
+            try {
+                // Сохраняем каждый голос как отдельный документ для простоты агрегации.
+                // В более сложном сценарии можно было бы группировать голоса от одного пользователя.
+                for (const participantId in votes) {
+                    if (votes[participantId] > 0) {
+                        await addDoc(collection(db, "votes"), {
+                            userId: userId, // Можно использовать uid из Firebase Auth
+                            participantId: participantId,
+                            votes: votes[participantId], // Количество голосов за этого участника
+                            countryCode: countryInfo ? countryInfo.code : 'unknown',
+                            countryName: countryInfo ? countryInfo.name : 'Unknown',
+                            timestamp: new Date()
+                        });
+                    }
+                }
+                console.log("Голоса успешно записаны в Firestore!");
+                return true;
+            } catch (e) {
+                console.error("Ошибка при добавлении голосов в Firestore: ", e);
+                return false;
             }
         }
 
-        function populateConfirmationModal() {
-            chosenParticipantsList.innerHTML = '';
-            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-            let hasVotes = false;
+        /**
+         * Listens for real-time updates to votes in Firestore and displays results.
+         */
+        function listenForVotes() {
+            const q = query(collection(db, "votes"));
 
-            for (const id in selectedParticipants) {
-                if (selectedParticipants[id].votes > 0) {
-                    hasVotes = true;
-                    const participant = selectedParticipants[id];
-                    const li = document.createElement('li');
-                    li.innerHTML = `<span>${participant.name} (${participant.song})</span> <span class="vote-count">${participant.votes}</span>`;
-                    chosenParticipantsList.appendChild(li);
+            onSnapshot(q, (querySnapshot) => {
+                const rawVotes = [];
+                querySnapshot.forEach((doc) => {
+                    rawVotes.push(doc.data());
+                });
+
+                const aggregatedResults = {};
+                rawVotes.forEach(vote => {
+                    if (!aggregatedResults[vote.participantId]) {
+                        const participant = participants.find(p => p.id === vote.participantId);
+                        aggregatedResults[vote.participantId] = {
+                            artist: participant ? participant.artist : 'Unknown Artist',
+                            country: participant ? participant.country : 'Unknown Country',
+                            song: participant ? participant.song : 'Unknown Song',
+                            totalVotes: 0
+                        };
+                    }
+                    aggregatedResults[vote.participantId].totalVotes += vote.votes;
+                });
+
+                displayResults(aggregatedResults);
+            }, (error) => {
+                console.error("Ошибка при получении данных Firestore:", error);
+            });
+        }
+
+        function displayResults(aggregatedResults) {
+            let tableHtml = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>${translations[currentLanguage].countryColumn}</th>
+                            <th>${translations[currentLanguage].artistColumn}</th>
+                            <th>${translations[currentLanguage].songColumn}</th>
+                            <th>${translations[currentLanguage].totalVotesColumn}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // Sort results by total votes descending
+            const sortedResults = Object.values(aggregatedResults).sort((a, b) => b.totalVotes - a.totalVotes);
+
+            sortedResults.forEach(result => {
+                tableHtml += `
+                    <tr>
+                        <td>${result.country}</td>
+                        <td class="participant-name">${result.artist}<br><small>${result.song}</small></td>
+                        <td>${result.song}</td>
+                        <td class="votes-count">${result.totalVotes} ${translations[currentLanguage].votes}</td>
+                    </tr>
+                `;
+            });
+
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            resultsDataContainer.innerHTML = tableHtml;
+        }
+
+        // --- Event Listeners ---
+        participantGrid.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.tagName === 'BUTTON' && target.dataset.id) {
+                const id = target.dataset.id;
+                const action = target.dataset.action;
+                if (action === 'increase') {
+                    updateVoteCount(id, 1);
+                } else if (action === 'decrease') {
+                    updateVoteCount(id, -1);
                 }
             }
-
-            if (!hasVotes) {
-                 chosenParticipantsList.innerHTML = `<li>${getTranslation('noVotesYet', currentLang)}</li>`;
-            }
-
-
-            if (selectedCountry) {
-                confirmationCountryInfoEl.textContent = `${getTranslation('confirmationCountryInfo', currentLang)} ${selectedCountry.name}`;
-            } else {
-                confirmationCountryInfoEl.textContent = getTranslation('menuDescriptionCountry', currentLang);
-            }
-            sendVotesBtn.textContent = getTranslation('sendVotesButton', currentLang);
-            confirmationModal.querySelector('h3').textContent = getTranslation('confirmVotesHeading', currentLang);
-        }
-
-        // --- Инициализация и обработчики событий ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const storedLang = localStorage.getItem('selectedLanguage');
-            if (storedLang) {
-                setLanguage(storedLang);
-            } else {
-                setLanguage('en'); // Язык по умолчанию
-            }
-
-            const storedCountry = JSON.parse(localStorage.getItem('selectedVotingCountry'));
-            if (storedCountry) {
-                setSelectedCountry(storedCountry);
-            } else {
-                 const defaultCountry = countries.find(c => c.code === 'row') || countries[0];
-                 if (defaultCountry) setSelectedCountry(defaultCountry);
-            }
-
-
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-            displayParticipants();
-            localizePage();
         });
 
-        langBtn.addEventListener('click', (e) => { e.preventDefault(); openMenu('language'); });
-        countryBtn.addEventListener('click', (e) => { e.preventDefault(); openMenu('country'); });
-        closeMenuBtn.addEventListener('click', closeSideMenu);
-
-
         checkoutBtn.addEventListener('click', () => {
-            if (!selectedCountry) {
-                alert(getTranslation('menuDescriptionCountry'));
-                openMenu('country');
-                return;
+            chosenParticipantsList.innerHTML = '';
+            for (const id in selectedParticipants) {
+                const p = selectedParticipants[id];
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span>${p.artist} (${p.country})</span>
+                    <span class="vote-count">${p.votes} ${translations[currentLanguage].votes}</span>
+                `;
+                chosenParticipantsList.appendChild(listItem);
             }
-            populateConfirmationModal();
             confirmationModal.style.display = 'flex';
             overlay.style.display = 'block';
-            localizePage();
+            localizeHtml(); // Update country info in modal
+        });
+
+        sendVotesBtn.addEventListener('click', async () => {
+            if (Object.keys(selectedParticipants).length === 0 || totalVotes === 0) {
+                alert('Please select participants and votes before sending.'); // Localize
+                return;
+            }
+
+            if (!currentCountry) {
+                alert('Please select your country first from the "Country" menu.'); // Localize
+                return;
+            }
+
+            // Generate a simple user ID (e.g., from a cookie, or Firebase Auth UID)
+            // For real applications, use Firebase Authentication to get a unique user.uid
+            let userId = localStorage.getItem('swevote_user_id');
+            if (!userId) {
+                userId = 'guest_' + Date.now() + Math.random().toString(36).substring(2, 8);
+                localStorage.setItem('swevote_user_id', userId);
+            }
+
+            const voteSuccessful = await saveVotesToFirestore(userId, selectedParticipants, currentCountry);
+
+            if (voteSuccessful) {
+                confirmationModal.style.display = 'none';
+                overlay.style.display = 'none';
+                thankYouMessageEl.style.display = 'flex';
+                setTimeout(() => {
+                    thankYouMessageEl.style.display = 'none';
+                }, 5000); // Hide after 5 seconds
+
+                // Reset votes after sending
+                totalVotes = 0;
+                selectedParticipants = {};
+                renderParticipants(); // Re-render to show 0 votes
+                updateCheckoutButtonVisibility();
+            } else {
+                alert("Failed to send votes. Please try again."); // Localize
+            }
+        });
+
+
+        langBtn.addEventListener('click', () => {
+            menuTitle.textContent = translations[currentLanguage].language;
+            menuDescription.textContent = translations[currentLanguage].menuDescription; // Using generic desc for both
+            menuList.innerHTML = '';
+            languages.forEach(lang => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" data-type="lang" data-code="${lang.code}">${lang.name}</a>`;
+                li.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentLanguage = lang.code;
+                    localStorage.setItem('lang', currentLanguage);
+                    localizeHtml();
+                    sideMenu.classList.remove('open');
+                    overlay.style.display = 'none';
+                });
+                menuList.appendChild(li);
+            });
+            sideMenu.classList.add('open');
+            overlay.style.display = 'block';
+        });
+
+        countryBtn.addEventListener('click', () => {
+            menuTitle.textContent = translations[currentLanguage].country;
+            menuDescription.textContent = translations[currentLanguage].menuDescription; // Using generic desc for both
+            menuList.innerHTML = '';
+            countries.forEach(country => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" data-type="country" data-code="${country.code}"><img src="${country.flag}" alt="${country.name} Flag"> ${country.name}</a>`;
+                li.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentCountry = country;
+                    localStorage.setItem('country', JSON.stringify(currentCountry));
+                    localizeHtml(); // Update country info
+                    sideMenu.classList.remove('open');
+                    overlay.style.display = 'none';
+                });
+                menuList.appendChild(li);
+            });
+            sideMenu.classList.add('open');
+            overlay.style.display = 'block';
+        });
+
+        staffBtn.addEventListener('click', () => {
+            loginErrorMessage.style.display = 'none'; // Скрываем сообщение об ошибке при открытии
+            staffEmailInput.value = ''; // Очищаем поле email
+            staffPasswordInput.value = ''; // Очищаем поле пароля
+            staffLoginModal.style.display = 'flex';
+            overlay.style.display = 'block';
+        });
+
+        staffLoginSubmitBtn.addEventListener('click', async () => {
+            const email = staffEmailInput.value;
+            const password = staffPasswordInput.value;
+
+            try {
+                // Аутентификация через Firebase Auth
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                console.log("Персонал вошел:", user.email);
+
+                // Если вход успешен
+                staffLoginModal.style.display = 'none';
+                staffResultsModal.style.display = 'flex';
+                overlay.style.display = 'block'; // Держим оверлей, пока показаны результаты
+
+                // Запускаем прослушивание голосов для панели персонала
+                listenForVotes();
+
+            } catch (error) {
+                console.error("Ошибка входа:", error.code, error.message);
+                loginErrorMessage.textContent = translations[currentLanguage].loginError;
+                loginErrorMessage.style.display = 'block';
+            }
+        });
+
+
+        closeMenuBtn.addEventListener('click', () => {
+            sideMenu.classList.remove('open');
+            overlay.style.display = 'none';
         });
 
         closeConfirmationBtn.addEventListener('click', () => {
             confirmationModal.style.display = 'none';
-            if (!sideMenu.classList.contains('open') && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex') {
-                 overlay.style.display = 'none';
-            }
+            overlay.style.display = 'none';
         });
 
-        sendVotesBtn.addEventListener('click', () => {
-            console.log('Отправка голосов:', selectedParticipants, 'от страны:', selectedCountry.name);
-
-            confirmationModal.style.display = 'none';
-            thankYouMessageEl.style.display = 'flex';
-            localizePage();
-
-            selectedParticipants = {};
-            totalVotes = 0;
-            updateAllParticipantCards();
-            updateCheckoutButton();
-            // overlay.style.display = 'none'; // Не скрываем, так как thankYouMessage его не использует и он может быть нужен другим модалкам
-            if (!sideMenu.classList.contains('open') && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex') {
-                 overlay.style.display = 'none'; // Скрываем оверлей, только если никакие другие модалки его не используют
-            }
-
-
-            setTimeout(() => {
-                thankYouMessageEl.style.display = 'none';
-                 updateCountdown();
-            }, 5000);
+        closeLoginModalBtn.addEventListener('click', () => {
+            staffLoginModal.style.display = 'none';
+            overlay.style.display = 'none';
         });
 
-        // --- Логика для Staff ---
-        if (staffBtn) {
-            staffBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                staffUsernameInput.value = '';
-                staffPasswordInput.value = '';
-                loginErrorMessage.style.display = 'none';
-
-                staffLoginModal.style.display = 'flex';
-                overlay.style.display = 'block';
-                localizePage();
-            });
-        }
-
-        if (closeLoginModalBtn) {
-            closeLoginModalBtn.addEventListener('click', () => {
-                staffLoginModal.style.display = 'none';
-                if (staffResultsModal.style.display !== 'flex' && !sideMenu.classList.contains('open') && confirmationModal.style.display !== 'flex') {
-                    overlay.style.display = 'none';
-                }
-            });
-        }
-
-        if (staffLoginSubmitBtn) {
-            staffLoginSubmitBtn.addEventListener('click', () => {
-                const username = staffUsernameInput.value;
-                const password = staffPasswordInput.value;
-                const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-
-                if (username === HIDDEN_STAFF_USERNAME && password === HIDDEN_STAFF_PASSWORD) {
-                    staffLoginModal.style.display = 'none';
-                    // overlay остается видимым для окна результатов
-                    displayVotingResults();
-                    staffResultsModal.style.display = 'flex';
-                    localizePage();
-                } else {
-                    loginErrorMessage.textContent = getTranslation("loginError", currentLang);
-                    loginErrorMessage.style.display = 'block';
-                }
-            });
-        }
-
-        if (closeResultsModalBtn) {
-            closeResultsModalBtn.addEventListener('click', () => {
-                staffResultsModal.style.display = 'none';
-                 if (staffLoginModal.style.display !== 'flex' && !sideMenu.classList.contains('open') && confirmationModal.style.display !== 'flex') {
-                    overlay.style.display = 'none';
-                }
-            });
-        }
+        closeResultsModalBtn.addEventListener('click', () => {
+            staffResultsModal.style.display = 'none';
+            overlay.style.display = 'none';
+            // Можно добавить отписку от listenForVotes здесь, если нужно
+            // unsubscribeFromVotes(); // Если listenForVotes возвращает функцию отписки
+        });
 
         overlay.addEventListener('click', () => {
-            let anyModalActive = false;
-            if (sideMenu.classList.contains('open')) {
-                closeSideMenu(); // Эта функция сама проверит другие модалки перед скрытием overlay
-                anyModalActive = true; // closeSideMenu сама управляет overlay
-            }
-             if (confirmationModal.style.display === 'flex') { // Не закрываем по клику на оверлей
-                anyModalActive = true;
-            }
-            if (staffLoginModal.style.display === 'flex') {
-                staffLoginModal.style.display = 'none';
-                anyModalActive = true;
-            }
-            if (staffResultsModal.style.display === 'flex') {
-                staffResultsModal.style.display = 'none';
-                anyModalActive = true;
-            }
-
-            // Если после закрытия модалки (staffLogin или staffResults) другие модалки (sideMenu, confirmation) не активны, скрываем overlay
-            if (anyModalActive && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex' && !sideMenu.classList.contains('open') && confirmationModal.style.display !== 'flex') {
-                 overlay.style.display = 'none';
-            } else if (!anyModalActive && overlay.style.display === 'block') { // Если клик был по оверлею, и никакая модалка не была им закрыта (т.е. открыта только confirmationModal или ничего)
-                // Здесь не делаем ничего, чтобы не закрыть overlay для confirmationModal
-            }
+            sideMenu.classList.remove('open');
+            confirmationModal.style.display = 'none';
+            staffLoginModal.style.display = 'none';
+            staffResultsModal.style.display = 'none';
+            overlay.style.display = 'none';
         });
 
 
-        function displayVotingResults() {
-            resultsDataContainer.innerHTML = '';
-            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
-
-            if (Object.keys(selectedParticipants).length === 0 || Object.values(selectedParticipants).every(p => p.votes === 0)) {
-                resultsDataContainer.innerHTML = `<p>${getTranslation('noVotesYet', currentLang)}</p>`;
-                return;
-            }
-
-            const table = document.createElement('table');
-            const thead = table.createTHead();
-            const headerRow = thead.insertRow();
-
-            const participantHeader = document.createElement('th');
-            participantHeader.textContent = getTranslation('participantColumnHeader', currentLang);
-            headerRow.appendChild(participantHeader);
-
-            const songHeader = document.createElement('th');
-            songHeader.textContent = getTranslation('songColumnHeader', currentLang);
-            headerRow.appendChild(songHeader);
-
-            const votesHeader = document.createElement('th');
-            votesHeader.textContent = getTranslation('votesColumnHeader', currentLang);
-            headerRow.appendChild(votesHeader);
-
-            const tbody = table.createTBody();
-
-            const sortedResults = Object.values(selectedParticipants)
-                .filter(p => p.votes > 0)
-                .sort((a, b) => {
-                    if (b.votes !== a.votes) {
-                        return b.votes - a.votes;
-                    }
-                    const nameA = a.name || '';
-                    const nameB = b.name || '';
-                    return nameA.localeCompare(nameB);
-                });
-
-            if (sortedResults.length === 0) { // Дополнительная проверка после фильтрации
-                 resultsDataContainer.innerHTML = `<p>${getTranslation('noVotesYet', currentLang)}</p>`;
-                return;
-            }
-
-            sortedResults.forEach(participant => {
-                const row = tbody.insertRow();
-
-                const nameCell = row.insertCell();
-                nameCell.innerHTML = `<span class="participant-name">${participant.name}</span><br><small>${participant.country_name || participant.id.toUpperCase()}</small>`;
-
-                const songCell = row.insertCell();
-                songCell.textContent = participant.song;
-
-                const votesCell = row.insertCell();
-                votesCell.textContent = participant.votes;
-                votesCell.classList.add('votes-count');
-            });
-
-            resultsDataContainer.appendChild(table);
-        }
-        // Добавьте ключ 'timeLeft' в переводы, если хотите локализовать эту часть
-        // Пример для translations.en: timeLeft: 'Time left'
-        // Пример для translations.ru: timeLeft: 'Осталось времени'
-        // Пример для translations.sv: timeLeft: 'Tid kvar'
-        translations.en.timeLeft = 'Time left';
-        translations.ru.timeLeft = 'Осталось времени';
-        translations.sv.timeLeft = 'Tid kvar';
-
+        // Initial setup
+        localizeHtml();
+        renderParticipants();
+        updateCheckoutButtonVisibility();
+        setInterval(updateCountdown, 1000); // Обновляем таймер каждую секунду
+        updateCountdown(); // Первое обновление сразу
     </script>
 </body>
 </html>
