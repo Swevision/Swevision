@@ -1,235 +1,1431 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Vote — Swevision 2025</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-localize="title">Swevision 2025 - Vote</title>
+    <link rel="icon" href="Heart.png.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Общие стили из вашего примера */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: url('.png') center/cover no-repeat; /* Замените на ваше фоновое изображение, если есть */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        .logo {
+            height: 60px;
+        }
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        nav a {
+            margin-left: 1.5rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            transition: background 0.3s;
+        }
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        footer {
+            background: #111;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #aaa;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto; /* Прижимает футер к низу */
+        }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+        /* Стили для сайдбара и основного контента */
+        .main-container {
+            display: flex;
+            flex: 1; /* Занимает доступное пространство */
+        }
+        .sidebar {
+            width: 300px;
+            padding: 2rem;
+            background-color: #1a1a1a;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 80px; /* Высота хедера */
+            align-self: flex-start; /* Прижимает сайдбар к верху родителя */
+            height: fit-content;
+        }
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #c084fc;
+        }
+        .timer {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .timer-message {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .timer-sub-message {
+            font-size: 0.9rem;
+            color: #ccc;
+            text-align: center;
+        }
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-    }
+        .voting-section {
+            flex: 1;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .voting-section h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #c084fc;
+        }
+        .participant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .participant-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+            padding-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+        .participant-card:hover {
+            transform: translateY(-5px);
+        }
+        .participant-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+        }
+        .participant-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+        .participant-card p {
+            font-size: 0.9rem;
+            color: #bbb;
+            margin-bottom: 0.5rem;
+        }
+        .vote-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .vote-controls button {
+            background-color: #c084fc;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+        .vote-controls button:hover {
+            background-color: #a769e0;
+        }
+        .vote-controls span {
+            font-size: 1.2rem;
+            font-weight: 700;
+            min-width: 25px;
+            text-align: center;
+        }
+        .add-to-cart-btn { /* Этот класс не используется в предоставленном JS, но стили есть */
+            background-color: #c084fc;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #a769e0;
+        }
+        .checkout-btn {
+            background-color: white;
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1001;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none; /* Скрыто по умолчанию */
+            transition: background 0.3s;
+        }
+        .checkout-btn:hover {
+            background-color: #eee;
+        }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #c084fc;
-      text-decoration: none;
-    }
+        /* Ползунок времени */
+        .time-progress-container {
+            width: calc(100% - 4rem); /* Ширина с учетом паддингов */
+            margin: 2rem auto;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            display: none; /* Скрыто по умолчанию */
+        }
+        .time-progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: white;
+            border-radius: 4px;
+            transition: width 1s linear; /* Плавное заполнение */
+        }
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 1.5rem;
-      font-weight: 500;
-    }
+        /* Меню Language/Country */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1002;
+            display: none;
+        }
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -400px; /* Скрыто за пределами экрана */
+            width: 350px;
+            height: 100%;
+            background-color: #1a1a1a;
+            z-index: 1003;
+            padding: 2rem;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            transition: right 0.3s ease-in-out;
+            overflow-y: auto; /* Прокрутка для длинных списков */
+        }
+        .side-menu.open {
+            right: 0;
+        }
+        .side-menu h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #c084fc;
+        }
+        .side-menu p {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+        .menu-list {
+            list-style: none;
+            padding: 0;
+        }
+        .menu-list li {
+            margin-bottom: 0.5rem;
+        }
+        .menu-list a {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .menu-list a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .menu-list img {
+            width: 30px;
+            height: 20px;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        .close-btn { /* Общий стиль для кнопок закрытия */
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-btn:hover {
+            color: #c084fc;
+        }
 
-    nav a:hover {
-      color: #d8b4fe;
-    }
+        /* Подтверждение голосования */
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1004;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none;
+        }
+        .confirmation-content {
+            background-color: #1a1a1a;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .confirmation-content h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #c084fc;
+        }
+        .chosen-participants-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+        .chosen-participants-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .chosen-participants-list li .vote-count {
+            font-weight: 700;
+            color: #c084fc;
+        }
+        .confirmation-country-info {
+            font-size: 0.9rem;
+            color: #bbb;
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .send-votes-btn {
+            display: block;
+            width: 100%;
+            background-color: #c084fc;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: background 0.3s;
+        }
+        .send-votes-btn:hover {
+            background-color: #a769e0;
+        }
 
-    footer {
-      background-color: #000;
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.6);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      margin-top: auto;
-    }
+        /* Сообщение об успешном голосовании */
+        .thank-you-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #c084fc;
+            text-align: center;
+            z-index: 1005;
+            display: none;
+        }
+        .thank-you-message small {
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            color: #fff;
+        }
 
-    .container {
-      flex: 1;
-      padding: 2rem;
-      text-align: center;
-    }
+        /* Staff Login and Results Modals */
+        .staff-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); /* Используем тот же фон, что и у confirmation-modal */
+            z-index: 1006; /* Выше, чем thank-you-message */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none; /* Скрыто по умолчанию */
+        }
 
-    h1 {
-      color: #c084fc;
-    }
+        .staff-modal-content { /* Общий стиль для контента модальных окон персонала */
+            background-color: #1a1a1a;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            position: relative;
+        }
 
-    #countdown {
-      font-size: 1.2rem;
-      margin-top: 1rem;
-    }
+        .staff-login-modal-content { /* Специфичный для окна входа */
+            width: 400px;
+            max-width: 90%;
+        }
 
-    #progress-container {
-      width: 100%;
-      max-width: 600px;
-      height: 20px;
-      background-color: #333;
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 1rem auto;
-    }
+        .staff-results-modal-content { /* Специфичный для окна результатов */
+            width: 600px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
 
-    #progress-bar {
-      height: 100%;
-      width: 0%;
-      background-color: #22c55e;
-      transition: width 1s linear;
-    }
+        .staff-modal-content h3 { /* Заголовок в модальных окнах персонала */
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #c084fc;
+        }
 
-    #progress-label {
-      margin-top: 2rem;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-      color: #a3e635;
-    }
+        .staff-modal-content input[type="text"],
+        .staff-modal-content input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #222;
+            color: white;
+            box-sizing: border-box;
+        }
+        .staff-modal-content input[type="password"] {
+            margin-bottom: 1.5rem; /* Чуть больше отступ для поля пароля */
+        }
 
-    iframe {
-      border: none;
-      margin-top: 2rem;
-    }
+        .staff-modal-content .login-submit-btn {
+            display: block;
+            width: 100%;
+            background-color: #c084fc;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+        .staff-modal-content .login-submit-btn:hover {
+            background-color: #a769e0;
+        }
 
-    .hidden {
-      display: none;
-    }
+        .login-error-message {
+            color: red;
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+        }
 
-    .visible {
-      display: block;
-    }
+        /* Стили для таблицы результатов */
+        #results-data-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        #results-data-container th,
+        #results-data-container td {
+            border: 1px solid #333;
+            padding: 0.75rem;
+            text-align: left;
+            color: #ddd; /* Цвет текста по умолчанию для ячеек */
+        }
+        #results-data-container th {
+            background-color: #2a2a2a;
+            color: #c084fc; /* Цвет текста заголовков таблицы */
+        }
+        #results-data-container .participant-name { /* Класс для имени участника/артиста */
+            font-weight: bold;
+            color: #fff; /* Ярче для имени артиста */
+        }
+         #results-data-container small { /* Стиль для страны под именем артиста */
+            color: #bbb;
+            font-size: 0.9em;
+        }
+        #results-data-container .votes-count {
+            font-weight: bold;
+            color: #c084fc; /* Цвет для количества голосов */
+            text-align: center;
+        }
 
-    .back-button {
-      display: inline-block;
-      margin-top: 2rem;
-      padding: 0.7rem 1.2rem;
-      background-color: #c084fc;
-      color: black;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 8px;
-    }
 
-    .back-button:hover {
-      background-color: #a855f7;
-    }
-  </style>
+        /* Медиа-запросы для адаптивности */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+            nav {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            nav a {
+                margin: 0.5rem;
+            }
+            .side-menu {
+                width: 100%;
+                right: -100%;
+            }
+            .side-menu.open {
+                right: 0;
+            }
+            .confirmation-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+            .thank-you-message {
+                font-size: 2rem;
+            }
+            .thank-you-message small {
+                font-size: 1rem;
+            }
+            .staff-login-modal-content,
+            .staff-results-modal-content {
+                width: 95%;
+            }
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <img src="SweLogo.png" alt="Swevision Logo" class="logo">
+        <nav>
+            <a href="#" id="lang-btn"><span data-localize="language">Language</span></a>
+            <a href="#" id="country-btn"><span data-localize="country">Country</span></a>
+            <a href="#" id="staff-btn"><span data-localize="staff">Staff</span></a>
+        </nav>
+    </header>
 
-  <!-- Header -->
-  <header>
-    <a href="index.html" class="logo">Swevision</a>
-    <nav>
-      <a href="show.html">Show</a>
-      <a href="participants.html">Participants</a>
-      <a href="news.html">News</a>
-      <a href="gallery.html">Gallery</a>
-    </nav>
-  </header>
+    <div class="main-container">
+        <aside class="sidebar">
+            <h2 id="timer-title" data-localize="timerHeadingPre">There is still time before the start of the first semi-final:</h2>
+            <div class="timer" id="countdown-timer">00:00:00:00</div>
+            <p class="timer-message" id="event-message" data-localize="eventMessage"></p>
+            <p class="timer-sub-message" id="voting-status" data-localize="votingStatus"></p>
+            <div class="time-progress-container" id="voting-progress-container">
+                <div class="time-progress-bar" id="voting-progress-bar"></div>
+            </div>
+        </aside>
 
-  <!-- Main Content -->
-  <div class="container">
-    <h1>Voting</h1>
-    <p id="status-text">Voting will open soon!</p>
-    <div id="countdown"></div>
-
-    <div id="progress-label" class="hidden">Шкала до закрытия голосования</div>
-    <div id="progress-container" class="hidden">
-      <div id="progress-bar"></div>
+        <main class="voting-section" id="voting-section">
+            <h2 id="voting-heading" data-localize="votingHeading"></h2>
+            <div class="participant-grid" id="participant-grid">
+                </div>
+            <button class="checkout-btn" id="checkout-btn" data-localize="checkoutButton">Check out</button>
+        </main>
     </div>
 
-    <a href="index.html" class="back-button hidden" id="back-btn">← Вернуться на главную</a>
+    <footer>
+        <span data-localize="footerText">© 2025 Swevision. All rights reserved.</span>
+    </footer>
 
-    <div id="vote-form" class="hidden">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScIZX0eM3n8cdbFMCNpLCLnwu9HtXTOK0aJYOXCz18-bGT4gA/viewform?embedded=true"
-        width="640" height="1090">Loading…</iframe>
+    <div class="overlay" id="overlay"></div>
+    <div class="side-menu" id="side-menu">
+        <button class="close-btn" id="close-menu-btn">&times;</button>
+        <h3 id="menu-title" data-localize="menuTitle"></h3>
+        <p id="menu-description" data-localize="menuDescription"></p>
+        <ul class="menu-list" id="menu-list">
+            </ul>
     </div>
-  </div>
 
-  <!-- Footer -->
-  <footer>
-    © 2025 Swevision. All rights reserved.
-  </footer>
+    <div class="confirmation-modal" id="confirmation-modal">
+        <div class="confirmation-content">
+            <button class="close-btn" id="close-confirmation-btn">&times;</button>
+            <h3 data-localize="confirmVotesHeading">Confirm your votes</h3>
+            <ul class="chosen-participants-list" id="chosen-participants-list">
+                </ul>
+            <p class="confirmation-country-info" id="confirmation-country-info" data-localize="confirmationCountryInfo"></p>
+            <button class="send-votes-btn" id="send-votes-btn" data-localize="sendVotesButton">Send votes!</button>
+        </div>
+    </div>
 
-  <!-- Script -->
-  <script>
-    const voteStart = new Date("2025-05-21T19:10:00"); // дата и время начала голосования
-    const voteEnd = new Date(voteStart.getTime() + 60 * 60 * 1000); // 1 час длительность
+    <div class="thank-you-message" id="thank-you-message">
+        <span data-localize="thankYouMessage">Thank you for voting!</span>
+        <small data-localize="thankYouSubMessage">Expect results soon.</small>
+    </div>
 
-    const countdownEl = document.getElementById("countdown");
-    const statusText = document.getElementById("status-text");
-    const formEl = document.getElementById("vote-form");
-    const progressEl = document.getElementById("progress-container");
-    const progressLabel = document.getElementById("progress-label");
-    const progressBar = document.getElementById("progress-bar");
-    const backBtn = document.getElementById("back-btn");
+    <div class="staff-modal" id="staff-login-modal">
+        <div class="staff-modal-content staff-login-modal-content">
+            <button class="close-btn" id="close-login-modal-btn">&times;</button>
+            <h3 id="staff-login-heading" data-localize="staffLoginHeading">Staff Login</h3>
+            <input type="text" id="staff-username" data-localize-placeholder="usernamePlaceholder" placeholder="Username">
+            <input type="password" id="staff-password" data-localize-placeholder="passwordPlaceholder" placeholder="Password">
+            <button id="staff-login-submit-btn" data-localize="loginButton" class="login-submit-btn">Login</button>
+            <p id="login-error-message" class="login-error-message" data-localize="loginError">Invalid credentials</p>
+        </div>
+    </div>
 
-    function formatTime(ms) {
-      const totalSeconds = Math.floor(ms / 1000);
-      const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, "0");
-      const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, "0");
-      const seconds = (totalSeconds % 60).toString().padStart(2, "0");
-      return `${hours}:${minutes}:${seconds}`;
-    }
+    <div class="staff-modal" id="staff-results-modal">
+        <div class="staff-modal-content staff-results-modal-content">
+            <button class="close-btn" id="close-results-modal-btn">&times;</button>
+            <h3 id="staff-results-heading" data-localize="votingResultsHeading">Voting Results</h3>
+            <div id="results-data-container">
+                </div>
+        </div>
+    </div>
 
-    function updateTimer() {
-      const now = new Date();
 
-      if (now < voteStart) {
-        const diff = voteStart - now;
-        countdownEl.textContent = `Voting opens in ${formatTime(diff)}`;
-        statusText.textContent = "Voting will open soon!";
-      } else if (now >= voteStart && now <= voteEnd) {
-        const total = voteEnd - voteStart;
-        const elapsed = now - voteStart;
-        const remaining = voteEnd - now;
+    <script>
+        const firstSemiFinalDate = new Date('2025-05-24T18:00:00Z'); // Пример даты и времени (UTC)
+        const votingStartTimeOffset = 0; // Голосование начинается одновременно с полуфиналом
+        const votingDuration = 30 * 60 * 1000; // Длительность голосования 30 минут
 
-        countdownEl.textContent = `Voting ends in ${formatTime(remaining)}`;
-        statusText.textContent = "Vote now! Time is running...";
-        formEl.classList.remove("hidden");
-        progressEl.classList.remove("hidden");
-        progressLabel.classList.remove("hidden");
-        backBtn.classList.remove("hidden");
+        const countdownTimerEl = document.getElementById('countdown-timer');
+        const timerTitleEl = document.getElementById('timer-title');
+        const eventMessageEl = document.getElementById('event-message');
+        const votingStatusEl = document.getElementById('voting-status');
+        const votingSection = document.getElementById('voting-section');
+        const votingHeading = document.getElementById('voting-heading');
+        const participantGrid = document.getElementById('participant-grid');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const votingProgressContainer = document.getElementById('voting-progress-container');
+        const votingProgressBar = document.getElementById('voting-progress-bar');
 
-        const percentage = Math.min(100, (elapsed / total) * 100);
-        progressBar.style.width = percentage + "%";
+        const langBtn = document.getElementById('lang-btn');
+        const countryBtn = document.getElementById('country-btn');
+        const overlay = document.getElementById('overlay');
+        const sideMenu = document.getElementById('side-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const menuTitle = document.getElementById('menu-title');
+        const menuDescription = document.getElementById('menu-description');
+        const menuList = document.getElementById('menu-list');
 
-        if (remaining <= 0) {
-          statusText.textContent = "Voting has ended.";
-          formEl.classList.add("hidden");
-          progressEl.classList.add("hidden");
-          progressLabel.classList.add("hidden");
-          countdownEl.textContent = "";
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const closeConfirmationBtn = document.getElementById('close-confirmation-btn');
+        const chosenParticipantsList = document.getElementById('chosen-participants-list');
+        const confirmationCountryInfoEl = document.getElementById('confirmation-country-info');
+        const sendVotesBtn = document.getElementById('send-votes-btn');
+        const thankYouMessageEl = document.getElementById('thank-you-message');
+
+        // Staff Login and Results Modal Elements
+        const staffBtn = document.getElementById('staff-btn');
+        const staffLoginModal = document.getElementById('staff-login-modal');
+        const closeLoginModalBtn = document.getElementById('close-login-modal-btn');
+        const staffUsernameInput = document.getElementById('staff-username');
+        const staffPasswordInput = document.getElementById('staff-password');
+        const staffLoginSubmitBtn = document.getElementById('staff-login-submit-btn');
+        const loginErrorMessage = document.getElementById('login-error-message');
+
+        const staffResultsModal = document.getElementById('staff-results-modal');
+        const closeResultsModalBtn = document.getElementById('close-results-modal-btn');
+        const resultsDataContainer = document.getElementById('results-data-container');
+
+        // =================================================================================
+        // ВАЖНОЕ ПРЕДУПРЕЖДЕНИЕ О БЕЗОПАСНОСТИ!
+        // Следующие учетные данные (логин и пароль) хранятся прямо в коде JavaScript.
+        // ЭТО ОЧЕНЬ НЕБЕЗОПАСНО для любого реального приложения.
+        // Любой, кто откроет исходный код страницы в браузере, сможет увидеть эти данные.
+        // Для безопасного решения требуется аутентификация на стороне сервера.
+        // Этот метод используется здесь исключительно для демонстрации по вашему запросу
+        // о "бесплатном хранении, чтобы не нашли" (хотя условие "не нашли" здесь не выполняется).
+        // =================================================================================
+        const STAFF_USERNAME = "admin"; // Замените на желаемый логин
+        const STAFF_PASSWORD = "password123"; // Замените на желаемый пароль
+
+        let totalVotes = 0;
+        const maxVotes = 20;
+        let selectedParticipants = {}; // { id: { name: 'Artist', song: 'Song', country_name: 'Country', votes: 0, image: '...' } }
+        let selectedCountry = null; // { code: '...', name: '...', flag: '...' }
+
+        // --- Участники (пример) ---
+        const participants = [
+            { id: 'swe', country: 'Sweden', artist: 'Marcus & Martinus', song: 'Unforgettable', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Marcus_%26_Martinus_Melfest_2024_%28cropped%29.jpg/330px-Marcus_%26_Martinus_Melfest_2024_%28cropped%29.jpg' },
+            { id: 'fin', country: 'Finland', artist: 'Windows95man', song: 'No Rules!', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Windows95man_Pala_-_Uuden_Musiikin_Kilpailu_2024.jpg/330px-Windows95man_Pala_-_Uuden_Musiikin_Kilpailu_2024.jpg' },
+            { id: 'ukr', country: 'Ukraine', artist: 'alyona alyona & Jerry Heil', song: 'Teresa & Maria', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Alyona_alyona_and_Jerry_Heil_at_Eurovision_2024_Grand_Final_2.jpg/330px-Alyona_alyona_and_Jerry_Heil_at_Eurovision_2024_Grand_Final_2.jpg' },
+            { id: 'fra', country: 'France', artist: 'Slimane', song: 'Mon amour', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Slimane_at_Eurovision_2024_Grand_Final_2.jpg/330px-Slimane_at_Eurovision_2024_Grand_Final_2.jpg' },
+            { id: 'ita', country: 'Italy', artist: 'Angelina Mango', song: 'La noia', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Angelina_Mango_at_Eurovision_2024_Grand_Final_2.jpg/330px-Angelina_Mango_at_Eurovision_2024_Grand_Final_2.jpg' },
+            { id: 'hrv', country: 'Croatia', artist: 'Baby Lasagna', song: 'Rim Tim Tagi Dim', image: 'NetyFoto.png' },
+        ];
+
+        // --- Локализация ---
+        const languages = [
+            { code: 'en', name: 'English' },
+            { code: 'ru', name: 'Русский' },
+            { code: 'sv', name: 'Svenska' },
+            { code: 'fr', name: 'Français' },
+            { code: 'de', name: 'Deutsch' },
+        ];
+
+        const countries = [
+            { code: 'al', name: 'Albania', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Flag_of_Albania.svg/30px-Flag_of_Albania.svg.png' },
+            { code: 'am', name: 'Armenia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Flag_of_Armenia.svg/30px-Flag_of_Armenia.svg.png' },
+            // ... (остальные страны из вашего примера)
+            { code: 'au', name: 'Australia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/30px-Flag_of_Australia_%28converted%29.svg.png' },
+            { code: 'at', name: 'Austria', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/30px-Flag_of_Austria.svg.png' },
+            { code: 'az', name: 'Azerbaijan', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Flag_of_Azerbaijan.svg/30px-Flag_of_Azerbaijan.svg.png' },
+            { code: 'be', name: 'Belgium', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Belgium.svg/30px-Flag_of_Belgium.svg.png' },
+            { code: 'hr', name: 'Croatia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Flag_of_Croatia.svg/30px-Flag_of_Croatia.svg.png' },
+            { code: 'cy', name: 'Cyprus', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Cyprus.svg/30px-Flag_of_Cyprus.svg.png' },
+            { code: 'cz', name: 'Czechia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_the_Czech_Republic.svg/30px-Flag_of_the_Czech_Republic.svg.png' },
+            { code: 'dk', name: 'Denmark', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Denmark.svg/30px-Flag_of_Denmark.svg.png' },
+            { code: 'ee', name: 'Estonia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/30px-Flag_of_Estonia.svg.png' },
+            { code: 'fi', name: 'Finland', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Finland.svg/30px-Flag_of_Finland.svg.png' },
+            { code: 'fr', name: 'France', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_France.svg/30px-Flag_of_France.svg.png' },
+            { code: 'ge', name: 'Georgia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Flag_of_Georgia.svg/30px-Flag_of_Georgia.svg.png' },
+            { code: 'de', name: 'Germany', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Germany.svg/30px-Flag_of_Germany.svg.png' },
+            { code: 'gr', name: 'Greece', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Greece.svg/30px-Flag_of_Greece.svg.png' },
+            { code: 'is', name: 'Iceland', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Iceland.svg/30px-Flag_of_Iceland.svg.png' },
+            { code: 'ie', name: 'Ireland', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Flag_of_Ireland.svg/30px-Flag_of_Ireland.svg.png' },
+            { code: 'il', name: 'Israel', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/30px-Flag_of_Israel.svg.png' },
+            { code: 'it', name: 'Italy', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Flag_of_Italy.svg/30px-Flag_of_Italy.svg.png' },
+            { code: 'lv', name: 'Latvia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Flag_of_Latvia.svg/30px-Flag_of_Latvia.svg.png' },
+            { code: 'lt', name: 'Lithuania', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Lithuania.svg/30px-Flag_of_Lithuania.svg.png' },
+            { code: 'lu', name: 'Luxembourg', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Flag_of_Luxembourg.svg/30px-Flag_of_Luxembourg.svg.png' },
+            { code: 'mt', name: 'Malta', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flag_of_Malta.svg/30px-Flag_of_Malta.svg.png' },
+            { code: 'md', name: 'Moldova', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/30px-Flag_of_Moldova.svg.png' },
+            { code: 'nl', name: 'Netherlands', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/30px-Flag_of_the_Netherlands.svg.png' },
+            { code: 'no', name: 'Norway', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/30px-Flag_of_Norway.svg.png' },
+            { code: 'pl', name: 'Poland', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Flag_of_Poland.svg/30px-Flag_of_Poland.svg.png' },
+            { code: 'pt', name: 'Portugal', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Portugal.svg/30px-Flag_of_Portugal.svg.png' },
+            { code: 'sm', name: 'San Marino', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Flag_of_San_Marino.svg/30px-Flag_of_San_Marino.svg.png' },
+            { code: 'rs', name: 'Serbia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Flag_of_Serbia.svg/30px-Flag_of_Serbia.svg.png' },
+            { code: 'si', name: 'Slovenia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Flag_of_Slovenia.svg/30px-Flag_of_Slovenia.svg.png' },
+            { code: 'es', name: 'Spain', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Spain.svg/30px-Flag_of_Spain.svg.png' },
+            { code: 'se', name: 'Sweden', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Flag_of_Sweden.svg/30px-Flag_of_Sweden.svg.png' },
+            { code: 'ch', name: 'Switzerland', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Switzerland.svg/30px-Flag_of_Switzerland.svg.png' },
+            { code: 'ua', name: 'Ukraine', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Ukraine.svg/30px-Flag_of_Ukraine.svg.png' },
+            { code: 'gb', name: 'United Kingdom', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Flag_of_the_United_Kingdom.svg/30px-Flag_of_the_United_Kingdom.svg.png' },
+            { code: 'ru', name: 'Russia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/30px-Flag_of_Russia.svg.png' },
+            { code: 'row', name: 'Rest of the world', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Flag_of_the_United_Nations.svg/30px-Flag_of_the_United_Nations.svg.png' }
+        ];
+
+        const translations = {
+            en: {
+                title: 'Swevision 2025 - Vote', language: 'Language', country: 'Country',
+                timerHeadingPre: 'There is still time before the start of the first semi-final:',
+                timerHeadingActive: 'Choose your favorite.', timerHeadingClosed: 'Voting has closed!',
+                eventMessagePre: '', eventMessageVotingSoon: 'Expect us to open voting very soon.',
+                eventMessageVotingClosed: 'Thank you for your participation.',
+                votingStatusClosed: 'Results will be announced shortly.',
+                checkoutButton: 'Check out',
+                menuTitleLanguage: 'Change Language', menuTitleCountry: 'Change Voting Region',
+                menuDescriptionCountry: 'Please make sure that you select the correct voting region to get the right instructions and to prevent issues when trying to submit your votes.',
+                confirmVotesHeading: 'Confirm your votes', confirmationCountryInfo: 'You are voting from: ',
+                sendVotesButton: 'Send votes!', thankYouMessage: 'Thank you for voting!',
+                thankYouSubMessage: 'Expect results soon.', footerText: '© 2025 Swevision. All rights reserved.',
+                maxVotesAlert: 'You can only vote for a maximum of 20 times in total.',
+                errorSendingVotes: 'An error occurred while sending your votes. Please try again.',
+                // Новые переводы для Staff
+                staff: 'Staff', staffLoginHeading: 'Staff Login', usernamePlaceholder: 'Username',
+                passwordPlaceholder: 'Password', loginButton: 'Login',
+                loginError: 'Invalid credentials. Please try again.',
+                votingResultsHeading: 'Voting Results',
+                participantColumnHeader: 'Participant (Artist / Country)', songColumnHeader: 'Song',
+                votesColumnHeader: 'Votes', noVotesYet: 'No votes have been cast yet.'
+            },
+            ru: {
+                title: 'Швевижн 2025 - Голосование', language: 'Язык', country: 'Страна',
+                timerHeadingPre: 'До начала первого полуфинала осталось:',
+                timerHeadingActive: 'Выберите своих фаворитов.', timerHeadingClosed: 'Голосование завершено!',
+                eventMessagePre: '', eventMessageVotingSoon: 'Ожидайте открытия голосования очень скоро.',
+                eventMessageVotingClosed: 'Спасибо за ваше участие.',
+                votingStatusClosed: 'Результаты будут объявлены в скором времени.',
+                checkoutButton: 'Оформить',
+                menuTitleLanguage: 'Сменить язык', menuTitleCountry: 'Выбрать регион голосования',
+                menuDescriptionCountry: 'Пожалуйста, убедитесь, что вы выбрали правильный регион голосования, чтобы получить верные инструкции и избежать проблем при отправке голосов.',
+                confirmVotesHeading: 'Подтвердите ваши голоса', confirmationCountryInfo: 'Вы голосуете из: ',
+                sendVotesButton: 'Отправить голоса!', thankYouMessage: 'Спасибо за ваш голос!',
+                thankYouSubMessage: 'Ожидайте результатов скоро.', footerText: '© 2025 Швевижн. Все права защищены.',
+                maxVotesAlert: 'Вы можете отдать не более 20 голосов в общей сложности.',
+                errorSendingVotes: 'Произошла ошибка при отправке ваших голосов. Пожалуйста, попробуйте еще раз.',
+                 // Новые переводы для Staff
+                staff: 'Персонал', staffLoginHeading: 'Вход для персонала', usernamePlaceholder: 'Имя пользователя',
+                passwordPlaceholder: 'Пароль', loginButton: 'Войти',
+                loginError: 'Неверные учетные данные. Пожалуйста, попробуйте еще раз.',
+                votingResultsHeading: 'Результаты голосования',
+                participantColumnHeader: 'Участник (Артист / Страна)', songColumnHeader: 'Песня',
+                votesColumnHeader: 'Голоса', noVotesYet: 'Голоса еще не поданы.'
+            },
+            sv: {
+                title: 'Swevision 2025 - Röstning', language: 'Språk', country: 'Land',
+                timerHeadingPre: 'Tid kvar till den första semifinalen:',
+                timerHeadingActive: 'Välj dina favoriter.', timerHeadingClosed: 'Röstningen har stängt!',
+                eventMessagePre: '', eventMessageVotingSoon: 'Vi förväntar oss att öppna röstningen snart.',
+                eventMessageVotingClosed: 'Tack för ditt deltagande.',
+                votingStatusClosed: 'Resultat kommer att meddelas inom kort.',
+                checkoutButton: 'Kassa',
+                menuTitleLanguage: 'Byt språk', menuTitleCountry: 'Välj röstningsregion',
+                menuDescriptionCountry: 'Se till att du väljer rätt röstningsregion för att få korrekta instruktioner och förhindra problem när du försöker skicka in dina röster.',
+                confirmVotesHeading: 'Bekräfta dina röster', confirmationCountryInfo: 'Du röstar från: ',
+                sendVotesButton: 'Skicka röster!', thankYouMessage: 'Tack för att du röstade!',
+                thankYouSubMessage: 'Resultat kommer snart.', footerText: '© 2025 Swevision. Alla rättigheter förbehållna.',
+                maxVotesAlert: 'Du kan bara rösta maximalt 20 gånger totalt.',
+                errorSendingVotes: 'Ett fel inträffade när dina röster skickades. Försök igen.',
+                // Новые переводы для Staff
+                staff: 'Personal', staffLoginHeading: 'Personalinloggning', usernamePlaceholder: 'Användarnamn',
+                passwordPlaceholder: 'Lösenord', loginButton: 'Logga in',
+                loginError: 'Ogiltiga uppgifter. Försök igen.',
+                votingResultsHeading: 'Röstningsresultat',
+                participantColumnHeader: 'Deltagare (Artist / Land)', songColumnHeader: 'Låt',
+                votesColumnHeader: 'Röster', noVotesYet: 'Inga röster har lagts ännu.'
+            }
+        };
+
+        // --- Функции локализации ---
+        function getTranslation(key, lang = null) {
+            const currentLang = lang || localStorage.getItem('selectedLanguage') || 'en';
+            return translations[currentLang]?.[key] || translations['en']?.[key] || key;
         }
-      } else {
-        statusText.textContent = "Voting has ended.";
-        countdownEl.textContent = "";
-        formEl.classList.add("hidden");
-        progressEl.classList.add("hidden");
-        progressLabel.classList.add("hidden");
-        backBtn.classList.remove("hidden");
-      }
-    }
 
-    updateTimer();
-    setInterval(updateTimer, 1000);
-  </script>
+        function localizePage() {
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+            document.querySelectorAll('[data-localize]').forEach(el => {
+                const key = el.dataset.localize;
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    if (el.tagName === 'TITLE' || el.hasAttribute('data-localize-value')) {
+                        el.textContent = translations[currentLang][key];
+                    } else if (el.hasAttribute('placeholder') && el.dataset.localizePlaceholder) {
+                         el.placeholder = translations[currentLang][el.dataset.localizePlaceholder] || translations['en'][el.dataset.localizePlaceholder] || el.dataset.localizePlaceholder;
+                    }
+                     else {
+                        el.innerHTML = translations[currentLang][key]; // Используем innerHTML для поддержки тегов в переводах (например, <br>)
+                    }
+                } else if (translations['en'] && translations['en'][key]) { // Fallback to English
+                     if (el.tagName === 'TITLE' || el.hasAttribute('data-localize-value')) {
+                        el.textContent = translations['en'][key];
+                    } else if (el.hasAttribute('placeholder') && el.dataset.localizePlaceholder) {
+                         el.placeholder = translations['en'][el.dataset.localizePlaceholder] || el.dataset.localizePlaceholder;
+                    }
+                     else {
+                        el.innerHTML = translations['en'][key];
+                    }
+                }
+            });
+             document.querySelectorAll('[data-localize-placeholder]').forEach(el => {
+                const key = el.dataset.localizePlaceholder;
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    el.placeholder = translations[currentLang][key];
+                } else if (translations['en'] && translations['en'][key]) {
+                    el.placeholder = translations['en'][key];
+                }
+            });
 
+            // Обновление заголовка и сообщений таймера отдельно, т.к. они могут меняться динамически
+            updateTimerAndMessagesContent();
+        }
+        
+        function updateTimerAndMessagesContent() {
+            const now = new Date();
+            const timeLeft = firstSemiFinalDate - now;
+            const votingEndTime = new Date(firstSemiFinalDate.getTime() + votingStartTimeOffset + votingDuration);
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+            if (timeLeft > 0) { // До начала события
+                timerTitleEl.textContent = getTranslation('timerHeadingPre', currentLang);
+                eventMessageEl.textContent = getTranslation('eventMessagePre', currentLang);
+                votingStatusEl.textContent = '';
+            } else if (now >= firstSemiFinalDate && now < votingEndTime) { // Во время голосования
+                timerTitleEl.textContent = getTranslation('timerHeadingActive', currentLang);
+                eventMessageEl.textContent = ''; // Можно добавить сообщение "Голосование открыто!"
+                votingStatusEl.textContent = ''; // Обновляется таймером голосования
+            } else { // После окончания голосования
+                timerTitleEl.textContent = getTranslation('timerHeadingClosed', currentLang);
+                eventMessageEl.textContent = getTranslation('eventMessageVotingClosed', currentLang);
+                votingStatusEl.textContent = getTranslation('votingStatusClosed', currentLang);
+            }
+
+            if (votingHeading) { // Обновление заголовка секции голосования
+                if (now >= firstSemiFinalDate && now < votingEndTime) {
+                     votingHeading.textContent = getTranslation('timerHeadingActive', currentLang);
+                } else if (now < firstSemiFinalDate) {
+                    votingHeading.textContent = ''; // Или "Голосование скоро начнется"
+                } else {
+                    votingHeading.textContent = getTranslation('timerHeadingClosed', currentLang);
+                }
+            }
+        }
+
+
+        function setLanguage(langCode) {
+            localStorage.setItem('selectedLanguage', langCode);
+            document.documentElement.lang = langCode;
+            localizePage();
+            displayParticipants(); // Перерисовать участников с новым языком, если их описание локализовано
+            updateCheckoutButton(); // Обновить кнопку Checkout
+            // Если модальное окно подтверждения открыто, обновить его
+            if (confirmationModal.style.display === 'flex') {
+                populateConfirmationModal();
+            }
+        }
+
+        function setSelectedCountry(countryData) {
+            selectedCountry = countryData;
+            localStorage.setItem('selectedVotingCountry', JSON.stringify(countryData));
+            // Обновить информацию о стране в UI, если нужно
+            if (countryBtn.querySelector('span')) {
+                 countryBtn.querySelector('span').textContent = `${getTranslation('country')}: ${countryData.name}`;
+            }
+            // При смене страны, возможно, стоит сбросить голоса или предупредить пользователя
+            // totalVotes = 0;
+            // selectedParticipants = {};
+            // updateAllParticipantCards();
+            // updateCheckoutButton();
+            if (confirmationModal.style.display === 'flex') {
+                populateConfirmationModal();
+            }
+            localizePage(); // Для обновления текста кнопки и других элементов
+        }
+
+
+        // --- Логика таймера и голосования ---
+        function updateCountdown() {
+            const now = new Date();
+            let timeLeft = firstSemiFinalDate - now;
+            let votingTimeLeft;
+
+            if (timeLeft <= 0) { // Событие началось или уже прошло
+                const votingEndTime = new Date(firstSemiFinalDate.getTime() + votingStartTimeOffset + votingDuration);
+                votingTimeLeft = votingEndTime - now;
+
+                if (votingTimeLeft > 0) { // Голосование активно
+                    if (!votingSection.classList.contains('active')) {
+                        votingSection.classList.add('active');
+                        votingProgressContainer.style.display = 'block';
+                        displayParticipants(); // Показать участников для голосования
+                        updateTimerAndMessagesContent();
+                    }
+                    
+                    const secondsTotal = Math.floor(votingDuration / 1000);
+                    const secondsLeft = Math.floor(votingTimeLeft / 1000);
+                    const progressPercentage = ((secondsTotal - secondsLeft) / secondsTotal) * 100;
+                    votingProgressBar.style.width = `${progressPercentage}%`;
+
+                    const days = Math.floor(votingTimeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((votingTimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((votingTimeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((votingTimeLeft % (1000 * 60)) / 1000);
+                    countdownTimerEl.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    votingStatusEl.textContent = `${getTranslation('timerHeadingActive')} Осталось: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+
+                } else { // Голосование завершено
+                    countdownTimerEl.textContent = "00:00:00";
+                    votingSection.classList.remove('active');
+                    participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('timerHeadingClosed')}</p>`; // Очистить сетку или показать сообщение
+                    checkoutBtn.style.display = 'none';
+                    votingProgressContainer.style.display = 'none';
+                    updateTimerAndMessagesContent();
+                    if (thankYouMessageEl.style.display !== 'flex' && Object.keys(selectedParticipants).length > 0){ // Если не было сообщения "спасибо" и были голоса
+                        // Можно показать сообщение о завершении, если пользователь не проголосовал
+                    }
+                }
+            } else { // До начала события
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                countdownTimerEl.textContent = `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                votingSection.classList.remove('active');
+                participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('eventMessageVotingSoon')}</p>`;
+                checkoutBtn.style.display = 'none';
+                votingProgressContainer.style.display = 'none';
+                 updateTimerAndMessagesContent();
+            }
+        }
+        
+        // --- Функции для отображения участников и голосования ---
+        function createParticipantCard(participantData) {
+            const card = document.createElement('div');
+            card.classList.add('participant-card');
+            card.dataset.id = participantData.id;
+
+            const img = document.createElement('img');
+            img.src = participantData.image;
+            img.alt = `${participantData.artist} - ${participantData.country}`;
+            img.onerror = () => { img.src = 'NetyFoto.png'; }; // Запасное изображение
+
+            const artistName = document.createElement('h4');
+            artistName.textContent = participantData.artist;
+
+            const songName = document.createElement('p');
+            songName.textContent = participantData.song;
+            
+            const countryName = document.createElement('p');
+            countryName.style.fontSize = '0.8em';
+            countryName.style.color = '#999';
+            countryName.textContent = participantData.country;
+
+
+            const voteControls = document.createElement('div');
+            voteControls.classList.add('vote-controls');
+
+            const minusBtn = document.createElement('button');
+            minusBtn.textContent = '-';
+            minusBtn.disabled = true; // Изначально "-" неактивна
+
+            const voteCountSpan = document.createElement('span');
+            voteCountSpan.textContent = selectedParticipants[participantData.id]?.votes || 0;
+
+            const plusBtn = document.createElement('button');
+            plusBtn.textContent = '+';
+             plusBtn.disabled = totalVotes >= maxVotes;
+
+
+            minusBtn.addEventListener('click', () => updateVote(participantData.id, -1));
+            plusBtn.addEventListener('click', () => updateVote(participantData.id, 1));
+
+            voteControls.appendChild(minusBtn);
+            voteControls.appendChild(voteCountSpan);
+            voteControls.appendChild(plusBtn);
+
+            card.appendChild(img);
+            card.appendChild(artistName);
+            card.appendChild(songName);
+            card.appendChild(countryName);
+            card.appendChild(voteControls);
+            return card;
+        }
+
+        function displayParticipants() {
+            participantGrid.innerHTML = ''; // Очистить перед добавлением
+            const now = new Date();
+            const votingEndTime = new Date(firstSemiFinalDate.getTime() + votingStartTimeOffset + votingDuration);
+            const isVotingActive = (now >= firstSemiFinalDate && now < votingEndTime);
+
+            if (isVotingActive) {
+                participants.forEach(p => {
+                    const card = createParticipantCard(p);
+                    participantGrid.appendChild(card);
+                });
+            } else if (now < firstSemiFinalDate) {
+                 participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('eventMessageVotingSoon')}</p>`;
+            } else {
+                 participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('timerHeadingClosed')}</p>`;
+            }
+        }
+
+        function updateVote(participantId, change) {
+            const participantData = participants.find(p => p.id === participantId);
+            if (!participantData) return;
+
+            let currentVotesForParticipant = selectedParticipants[participantId]?.votes || 0;
+
+            if (change === 1 && totalVotes >= maxVotes) {
+                alert(getTranslation('maxVotesAlert'));
+                return;
+            }
+            if (change === -1 && currentVotesForParticipant <= 0) {
+                return;
+            }
+
+            currentVotesForParticipant += change;
+            totalVotes += change;
+
+            selectedParticipants[participantId] = {
+                id: participantId,
+                name: participantData.artist,
+                song: participantData.song,
+                country_name: participantData.country, // Сохраняем название страны
+                votes: currentVotesForParticipant,
+                image: participantData.image
+            };
+
+            if (currentVotesForParticipant === 0) {
+                delete selectedParticipants[participantId];
+            }
+            updateParticipantCard(participantId);
+            updateAllPlusButtonsState();
+            updateCheckoutButton();
+        }
+        
+        function updateParticipantCard(participantId) {
+            const card = participantGrid.querySelector(`.participant-card[data-id="${participantId}"]`);
+            if (card) {
+                const voteCountSpan = card.querySelector('.vote-controls span');
+                const minusBtn = card.querySelector('.vote-controls button:first-child');
+                
+                voteCountSpan.textContent = selectedParticipants[participantId]?.votes || 0;
+                minusBtn.disabled = !(selectedParticipants[participantId]?.votes > 0);
+            }
+        }
+
+        function updateAllPlusButtonsState() {
+            const allPlusButtons = participantGrid.querySelectorAll('.vote-controls button:last-child');
+            allPlusButtons.forEach(btn => {
+                btn.disabled = totalVotes >= maxVotes;
+            });
+        }
+        
+        function updateAllParticipantCards() {
+            participants.forEach(p => updateParticipantCard(p.id));
+            updateAllPlusButtonsState();
+        }
+
+
+        function updateCheckoutButton() {
+            if (totalVotes > 0) {
+                checkoutBtn.style.display = 'block';
+                checkoutBtn.textContent = `${getTranslation('checkoutButton')} (${totalVotes}/${maxVotes})`;
+            } else {
+                checkoutBtn.style.display = 'none';
+            }
+        }
+
+        // --- Функции для меню и модальных окон ---
+        function openMenu(type) {
+            overlay.style.display = 'block';
+            sideMenu.classList.add('open');
+            menuList.innerHTML = ''; // Очистить список
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+            if (type === 'language') {
+                menuTitle.textContent = getTranslation('menuTitleLanguage', currentLang);
+                menuDescription.textContent = '';
+                languages.forEach(lang => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = '#';
+                    a.textContent = lang.name;
+                    a.onclick = (e) => {
+                        e.preventDefault();
+                        setLanguage(lang.code);
+                        closeSideMenu();
+                    };
+                    li.appendChild(a);
+                    menuList.appendChild(li);
+                });
+            } else if (type === 'country') {
+                menuTitle.textContent = getTranslation('menuTitleCountry', currentLang);
+                menuDescription.textContent = getTranslation('menuDescriptionCountry', currentLang);
+                countries.forEach(country => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = '#';
+                    const flagImg = document.createElement('img');
+                    flagImg.src = country.flag;
+                    flagImg.alt = country.name;
+                    a.appendChild(flagImg);
+                    a.appendChild(document.createTextNode(country.name));
+                    a.onclick = (e) => {
+                        e.preventDefault();
+                        setSelectedCountry(country);
+                        closeSideMenu();
+                    };
+                    li.appendChild(a);
+                    menuList.appendChild(li);
+                });
+            }
+            localizePage(); // Для обновления заголовков и описаний в меню
+        }
+
+        function closeSideMenu() {
+            sideMenu.classList.remove('open');
+            overlay.style.display = 'none';
+        }
+
+        function populateConfirmationModal() {
+            chosenParticipantsList.innerHTML = '';
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+            let hasVotes = false;
+
+            for (const id in selectedParticipants) {
+                if (selectedParticipants[id].votes > 0) {
+                    hasVotes = true;
+                    const participant = selectedParticipants[id];
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>${participant.name} (${participant.song})</span> <span class="vote-count">${participant.votes}</span>`;
+                    chosenParticipantsList.appendChild(li);
+                }
+            }
+            
+            if (!hasVotes) { // Если нет голосов, но попали сюда (не должно быть, но на всякий случай)
+                 chosenParticipantsList.innerHTML = `<li>${getTranslation('noVotesYet', currentLang)}</li>`;
+            }
+
+
+            if (selectedCountry) {
+                confirmationCountryInfoEl.textContent = `${getTranslation('confirmationCountryInfo', currentLang)} ${selectedCountry.name}`;
+            } else {
+                confirmationCountryInfoEl.textContent = getTranslation('menuDescriptionCountry', currentLang); // Просим выбрать страну
+            }
+             // Обновить текст кнопки "Отправить голоса"
+            sendVotesBtn.textContent = getTranslation('sendVotesButton', currentLang);
+            // Обновить заголовок модального окна
+            confirmationModal.querySelector('h3').textContent = getTranslation('confirmVotesHeading', currentLang);
+        }
+
+        // --- Инициализация и обработчики событий ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedLang = localStorage.getItem('selectedLanguage');
+            if (storedLang) {
+                setLanguage(storedLang);
+            } else {
+                setLanguage('en'); // Язык по умолчанию
+            }
+
+            const storedCountry = JSON.parse(localStorage.getItem('selectedVotingCountry'));
+            if (storedCountry) {
+                setSelectedCountry(storedCountry);
+            } else {
+                // Можно автоматически выбрать первую страну из списка или "Rest of the World"
+                 const defaultCountry = countries.find(c => c.code === 'row') || countries[0];
+                 if (defaultCountry) setSelectedCountry(defaultCountry);
+            }
+
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            displayParticipants(); // Первоначальное отображение участников (или сообщения)
+            localizePage(); // Локализовать страницу при загрузке
+        });
+
+        langBtn.addEventListener('click', (e) => { e.preventDefault(); openMenu('language'); });
+        countryBtn.addEventListener('click', (e) => { e.preventDefault(); openMenu('country'); });
+        closeMenuBtn.addEventListener('click', closeSideMenu);
+        
+
+        checkoutBtn.addEventListener('click', () => {
+            if (!selectedCountry) {
+                alert(getTranslation('menuDescriptionCountry')); // Просим выбрать страну
+                openMenu('country');
+                return;
+            }
+            populateConfirmationModal();
+            confirmationModal.style.display = 'flex';
+            overlay.style.display = 'block';
+            localizePage(); // Локализовать модальное окно
+        });
+
+        closeConfirmationBtn.addEventListener('click', () => {
+            confirmationModal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        sendVotesBtn.addEventListener('click', () => {
+            // Здесь должна быть логика отправки голосов на сервер
+            // Для примера просто показываем сообщение "Спасибо"
+            console.log('Отправка голосов:', selectedParticipants, 'от страны:', selectedCountry.name);
+            
+            // Имитация успешной отправки
+            confirmationModal.style.display = 'none';
+            thankYouMessageEl.style.display = 'flex';
+            localizePage(); // Локализовать сообщение "Спасибо"
+
+            // Очистка голосов и скрытие кнопки "Оформить"
+            selectedParticipants = {};
+            totalVotes = 0;
+            updateAllParticipantCards(); // Обновить карточки, чтобы сбросить счетчики на них
+            updateCheckoutButton(); // Скрыть кнопку checkout
+            overlay.style.display = 'none'; // Скрыть оверлей, так как thankYouMessage полноэкранное
+
+            // Можно добавить таймер для скрытия "Спасибо" сообщения
+            setTimeout(() => {
+                thankYouMessageEl.style.display = 'none';
+                // participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('timerHeadingClosed')}</p>`; // Показать, что голосование завершено
+                 updateCountdown(); // Обновит состояние в зависимости от времени
+            }, 5000); // 5 секунд
+        });
+
+        // --- Логика для Staff ---
+        if (staffBtn) {
+            staffBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                staffUsernameInput.value = '';
+                staffPasswordInput.value = '';
+                loginErrorMessage.style.display = 'none';
+                
+                staffLoginModal.style.display = 'flex';
+                overlay.style.display = 'block';
+                localizePage(); // Локализовать модальное окно входа
+            });
+        }
+
+        if (closeLoginModalBtn) {
+            closeLoginModalBtn.addEventListener('click', () => {
+                staffLoginModal.style.display = 'none';
+                if (staffResultsModal.style.display !== 'flex' && sideMenu.style.right !== '0px' && confirmationModal.style.display !== 'flex') {
+                    overlay.style.display = 'none';
+                }
+            });
+        }
+
+        if (staffLoginSubmitBtn) {
+            staffLoginSubmitBtn.addEventListener('click', () => {
+                const username = staffUsernameInput.value;
+                const password = staffPasswordInput.value;
+                const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+                if (username === STAFF_USERNAME && password === STAFF_PASSWORD) {
+                    staffLoginModal.style.display = 'none';
+                    // overlay остается видимым для окна результатов
+                    displayVotingResults();
+                    staffResultsModal.style.display = 'flex';
+                    localizePage(); // Локализовать статичные части окна результатов (например, заголовок)
+                } else {
+                    loginErrorMessage.textContent = getTranslation("loginError", currentLang);
+                    loginErrorMessage.style.display = 'block';
+                }
+            });
+        }
+
+        if (closeResultsModalBtn) {
+            closeResultsModalBtn.addEventListener('click', () => {
+                staffResultsModal.style.display = 'none';
+                 if (staffLoginModal.style.display !== 'flex' && sideMenu.style.right !== '0px' && confirmationModal.style.display !== 'flex') {
+                    overlay.style.display = 'none';
+                }
+            });
+        }
+        
+        overlay.addEventListener('click', () => {
+            let anyModalOpen = false;
+            if (sideMenu.classList.contains('open')) {
+                closeSideMenu();
+                anyModalOpen = true;
+            }
+            if (confirmationModal.style.display === 'flex') {
+                // confirmationModal.style.display = 'none'; // Управляется своей кнопкой
+                // anyModalOpen = true; // Не закрываем по клику на оверлей, чтобы не потерять выбор
+            }
+            if (staffLoginModal.style.display === 'flex') {
+                staffLoginModal.style.display = 'none';
+                anyModalOpen = true;
+            }
+            if (staffResultsModal.style.display === 'flex') {
+                staffResultsModal.style.display = 'none';
+                anyModalOpen = true;
+            }
+
+            if (anyModalOpen && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex' && !sideMenu.classList.contains('open') && confirmationModal.style.display !== 'flex') {
+                 overlay.style.display = 'none';
+            } else if (!anyModalOpen) {
+                 overlay.style.display = 'none'; // Если никакие модалки не были закрыты этим кликом, но оверлей виден
+            }
+        });
+
+
+        function displayVotingResults() {
+            resultsDataContainer.innerHTML = ''; // Очистить предыдущие результаты
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+            if (Object.keys(selectedParticipants).length === 0) {
+                resultsDataContainer.innerHTML = `<p>${getTranslation('noVotesYet', currentLang)}</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            const thead = table.createTHead();
+            const headerRow = thead.insertRow();
+            
+            const participantHeader = document.createElement('th');
+            participantHeader.textContent = getTranslation('participantColumnHeader', currentLang);
+            headerRow.appendChild(participantHeader);
+
+            const songHeader = document.createElement('th');
+            songHeader.textContent = getTranslation('songColumnHeader', currentLang);
+            headerRow.appendChild(songHeader);
+
+            const votesHeader = document.createElement('th');
+            votesHeader.textContent = getTranslation('votesColumnHeader', currentLang);
+            // votesHeader.style.textAlign = 'center'; // Уже задано в CSS через .votes-count
+            headerRow.appendChild(votesHeader);
+            
+            const tbody = table.createTBody();
+
+            // Сортировка: сначала по убыванию голосов, потом по имени артиста
+            const sortedResults = Object.values(selectedParticipants)
+                .filter(p => p.votes > 0) // Показываем только тех, за кого голосовали
+                .sort((a, b) => {
+                    if (b.votes !== a.votes) {
+                        return b.votes - a.votes;
+                    }
+                    const nameA = a.name || '';
+                    const nameB = b.name || '';
+                    return nameA.localeCompare(nameB);
+                });
+            
+            if (sortedResults.length === 0) {
+                 resultsDataContainer.innerHTML = `<p>${getTranslation('noVotesYet', currentLang)}</p>`;
+                return;
+            }
+
+            sortedResults.forEach(participant => {
+                const row = tbody.insertRow();
+                
+                const nameCell = row.insertCell();
+                nameCell.innerHTML = `<span class="participant-name">${participant.name}</span><br><small>${participant.country_name || participant.id.toUpperCase()}</small>`;
+                
+                const songCell = row.insertCell();
+                songCell.textContent = participant.song;
+
+                const votesCell = row.insertCell();
+                votesCell.textContent = participant.votes;
+                votesCell.classList.add('votes-count');
+            });
+
+            resultsDataContainer.appendChild(table);
+        }
+
+    </script>
 </body>
 </html>
