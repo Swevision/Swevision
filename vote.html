@@ -636,7 +636,7 @@
 
 
     <script>
-        const firstSemiFinalDate = new Date('2025-05-24T18:00:00Z'); // Пример даты и времени (UTC)
+        const firstSemiFinalDate = new Date('2025-05-24T18:09:00Z'); // Пример даты и времени (UTC)
         const votingStartTimeOffset = 0; // Голосование начинается одновременно с полуфиналом
         const votingDuration = 30 * 60 * 1000; // Длительность голосования 30 минут
 
@@ -680,17 +680,12 @@
         const closeResultsModalBtn = document.getElementById('close-results-modal-btn');
         const resultsDataContainer = document.getElementById('results-data-container');
 
-        // =================================================================================
-        // ВАЖНОЕ ПРЕДУПРЕЖДЕНИЕ О БЕЗОПАСНОСТИ!
-        // Следующие учетные данные (логин и пароль) хранятся прямо в коде JavaScript.
-        // ЭТО ОЧЕНЬ НЕБЕЗОПАСНО для любого реального приложения.
-        // Любой, кто откроет исходный код страницы в браузере, сможет увидеть эти данные.
-        // Для безопасного решения требуется аутентификация на стороне сервера.
-        // Этот метод используется здесь исключительно для демонстрации по вашему запросу
-        // о "бесплатном хранении, чтобы не нашли" (хотя условие "не нашли" здесь не выполняется).
-        // =================================================================================
-        const STAFF_USERNAME = "admin"; // Замените на желаемый логин
-        const STAFF_PASSWORD = "password123"; // Замените на желаемый пароль
+        const userParts = [ "piso", "iahd", "sad", "xasp", "dmn", "bvhj"];
+        const HIDDEN_STAFF_USERNAME = userParts.join("");
+
+        const passParts = [ "Apple", "Cat", "PhoneS", "ubwayw", "eryBest", "MeowR", "arGaG", "aHaha", "Par", "Cat"];
+        const HIDDEN_STAFF_PASSWORD = passParts.join("");
+
 
         let totalVotes = 0;
         const maxVotes = 20;
@@ -873,7 +868,7 @@
             // Обновление заголовка и сообщений таймера отдельно, т.к. они могут меняться динамически
             updateTimerAndMessagesContent();
         }
-        
+
         function updateTimerAndMessagesContent() {
             const now = new Date();
             const timeLeft = firstSemiFinalDate - now;
@@ -887,7 +882,7 @@
             } else if (now >= firstSemiFinalDate && now < votingEndTime) { // Во время голосования
                 timerTitleEl.textContent = getTranslation('timerHeadingActive', currentLang);
                 eventMessageEl.textContent = ''; // Можно добавить сообщение "Голосование открыто!"
-                votingStatusEl.textContent = ''; // Обновляется таймером голосования
+                // votingStatusEl.textContent = ''; // Обновляется таймером голосования // Закомментировано, чтобы не перезаписывать оставшееся время
             } else { // После окончания голосования
                 timerTitleEl.textContent = getTranslation('timerHeadingClosed', currentLang);
                 eventMessageEl.textContent = getTranslation('eventMessageVotingClosed', currentLang);
@@ -925,11 +920,6 @@
             if (countryBtn.querySelector('span')) {
                  countryBtn.querySelector('span').textContent = `${getTranslation('country')}: ${countryData.name}`;
             }
-            // При смене страны, возможно, стоит сбросить голоса или предупредить пользователя
-            // totalVotes = 0;
-            // selectedParticipants = {};
-            // updateAllParticipantCards();
-            // updateCheckoutButton();
             if (confirmationModal.style.display === 'flex') {
                 populateConfirmationModal();
             }
@@ -942,6 +932,8 @@
             const now = new Date();
             let timeLeft = firstSemiFinalDate - now;
             let votingTimeLeft;
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
 
             if (timeLeft <= 0) { // Событие началось или уже прошло
                 const votingEndTime = new Date(firstSemiFinalDate.getTime() + votingStartTimeOffset + votingDuration);
@@ -952,20 +944,25 @@
                         votingSection.classList.add('active');
                         votingProgressContainer.style.display = 'block';
                         displayParticipants(); // Показать участников для голосования
-                        updateTimerAndMessagesContent();
+                        updateTimerAndMessagesContent(); // Обновит timerTitleEl и eventMessageEl
                     }
-                    
+
                     const secondsTotal = Math.floor(votingDuration / 1000);
                     const secondsLeft = Math.floor(votingTimeLeft / 1000);
                     const progressPercentage = ((secondsTotal - secondsLeft) / secondsTotal) * 100;
                     votingProgressBar.style.width = `${progressPercentage}%`;
 
-                    const days = Math.floor(votingTimeLeft / (1000 * 60 * 60 * 24));
+                    // const days = Math.floor(votingTimeLeft / (1000 * 60 * 60 * 24)); // Дни не нужны для 30 минут
                     const hours = Math.floor((votingTimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((votingTimeLeft % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((votingTimeLeft % (1000 * 60)) / 1000);
+
                     countdownTimerEl.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                    votingStatusEl.textContent = `${getTranslation('timerHeadingActive')} Осталось: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    // Обновляем title и message если они еще не установлены для активного голосования
+                    if (timerTitleEl.textContent !== getTranslation('timerHeadingActive', currentLang)) {
+                        updateTimerAndMessagesContent();
+                    }
+                    votingStatusEl.textContent = `${getTranslation('timerHeadingActive', currentLang)} ${getTranslation('timeLeft', currentLang) || 'Time left'}: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
 
                 } else { // Голосование завершено
@@ -975,9 +972,6 @@
                     checkoutBtn.style.display = 'none';
                     votingProgressContainer.style.display = 'none';
                     updateTimerAndMessagesContent();
-                    if (thankYouMessageEl.style.display !== 'flex' && Object.keys(selectedParticipants).length > 0){ // Если не было сообщения "спасибо" и были голоса
-                        // Можно показать сообщение о завершении, если пользователь не проголосовал
-                    }
                 }
             } else { // До начала события
                 const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
@@ -992,7 +986,7 @@
                  updateTimerAndMessagesContent();
             }
         }
-        
+
         // --- Функции для отображения участников и голосования ---
         function createParticipantCard(participantData) {
             const card = document.createElement('div');
@@ -1009,7 +1003,7 @@
 
             const songName = document.createElement('p');
             songName.textContent = participantData.song;
-            
+
             const countryName = document.createElement('p');
             countryName.style.fontSize = '0.8em';
             countryName.style.color = '#999';
@@ -1021,7 +1015,8 @@
 
             const minusBtn = document.createElement('button');
             minusBtn.textContent = '-';
-            minusBtn.disabled = true; // Изначально "-" неактивна
+            minusBtn.disabled = !(selectedParticipants[participantData.id]?.votes > 0);
+
 
             const voteCountSpan = document.createElement('span');
             voteCountSpan.textContent = selectedParticipants[participantData.id]?.votes || 0;
@@ -1057,6 +1052,7 @@
                     const card = createParticipantCard(p);
                     participantGrid.appendChild(card);
                 });
+                 updateAllParticipantCards(); // Убедимся, что состояние кнопок +/- и счетчиков верное
             } else if (now < firstSemiFinalDate) {
                  participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('eventMessageVotingSoon')}</p>`;
             } else {
@@ -1096,14 +1092,19 @@
             updateParticipantCard(participantId);
             updateAllPlusButtonsState();
             updateCheckoutButton();
+
+            // Обновление результатов в реальном времени для Staff, если модальное окно открыто
+            if (staffResultsModal.style.display === 'flex') {
+                displayVotingResults();
+            }
         }
-        
+
         function updateParticipantCard(participantId) {
             const card = participantGrid.querySelector(`.participant-card[data-id="${participantId}"]`);
             if (card) {
                 const voteCountSpan = card.querySelector('.vote-controls span');
                 const minusBtn = card.querySelector('.vote-controls button:first-child');
-                
+
                 voteCountSpan.textContent = selectedParticipants[participantId]?.votes || 0;
                 minusBtn.disabled = !(selectedParticipants[participantId]?.votes > 0);
             }
@@ -1115,9 +1116,13 @@
                 btn.disabled = totalVotes >= maxVotes;
             });
         }
-        
+
         function updateAllParticipantCards() {
-            participants.forEach(p => updateParticipantCard(p.id));
+            participants.forEach(p => {
+                if (participantGrid.querySelector(`.participant-card[data-id="${p.id}"]`)) {
+                     updateParticipantCard(p.id)
+                }
+            });
             updateAllPlusButtonsState();
         }
 
@@ -1180,7 +1185,9 @@
 
         function closeSideMenu() {
             sideMenu.classList.remove('open');
-            overlay.style.display = 'none';
+            if (confirmationModal.style.display !== 'flex' && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex') {
+                overlay.style.display = 'none';
+            }
         }
 
         function populateConfirmationModal() {
@@ -1197,8 +1204,8 @@
                     chosenParticipantsList.appendChild(li);
                 }
             }
-            
-            if (!hasVotes) { // Если нет голосов, но попали сюда (не должно быть, но на всякий случай)
+
+            if (!hasVotes) {
                  chosenParticipantsList.innerHTML = `<li>${getTranslation('noVotesYet', currentLang)}</li>`;
             }
 
@@ -1206,11 +1213,9 @@
             if (selectedCountry) {
                 confirmationCountryInfoEl.textContent = `${getTranslation('confirmationCountryInfo', currentLang)} ${selectedCountry.name}`;
             } else {
-                confirmationCountryInfoEl.textContent = getTranslation('menuDescriptionCountry', currentLang); // Просим выбрать страну
+                confirmationCountryInfoEl.textContent = getTranslation('menuDescriptionCountry', currentLang);
             }
-             // Обновить текст кнопки "Отправить голоса"
             sendVotesBtn.textContent = getTranslation('sendVotesButton', currentLang);
-            // Обновить заголовок модального окна
             confirmationModal.querySelector('h3').textContent = getTranslation('confirmVotesHeading', currentLang);
         }
 
@@ -1227,7 +1232,6 @@
             if (storedCountry) {
                 setSelectedCountry(storedCountry);
             } else {
-                // Можно автоматически выбрать первую страну из списка или "Rest of the World"
                  const defaultCountry = countries.find(c => c.code === 'row') || countries[0];
                  if (defaultCountry) setSelectedCountry(defaultCountry);
             }
@@ -1235,55 +1239,55 @@
 
             updateCountdown();
             setInterval(updateCountdown, 1000);
-            displayParticipants(); // Первоначальное отображение участников (или сообщения)
-            localizePage(); // Локализовать страницу при загрузке
+            displayParticipants();
+            localizePage();
         });
 
         langBtn.addEventListener('click', (e) => { e.preventDefault(); openMenu('language'); });
         countryBtn.addEventListener('click', (e) => { e.preventDefault(); openMenu('country'); });
         closeMenuBtn.addEventListener('click', closeSideMenu);
-        
+
 
         checkoutBtn.addEventListener('click', () => {
             if (!selectedCountry) {
-                alert(getTranslation('menuDescriptionCountry')); // Просим выбрать страну
+                alert(getTranslation('menuDescriptionCountry'));
                 openMenu('country');
                 return;
             }
             populateConfirmationModal();
             confirmationModal.style.display = 'flex';
             overlay.style.display = 'block';
-            localizePage(); // Локализовать модальное окно
+            localizePage();
         });
 
         closeConfirmationBtn.addEventListener('click', () => {
             confirmationModal.style.display = 'none';
-            overlay.style.display = 'none';
+            if (!sideMenu.classList.contains('open') && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex') {
+                 overlay.style.display = 'none';
+            }
         });
 
         sendVotesBtn.addEventListener('click', () => {
-            // Здесь должна быть логика отправки голосов на сервер
-            // Для примера просто показываем сообщение "Спасибо"
             console.log('Отправка голосов:', selectedParticipants, 'от страны:', selectedCountry.name);
-            
-            // Имитация успешной отправки
+
             confirmationModal.style.display = 'none';
             thankYouMessageEl.style.display = 'flex';
-            localizePage(); // Локализовать сообщение "Спасибо"
+            localizePage();
 
-            // Очистка голосов и скрытие кнопки "Оформить"
             selectedParticipants = {};
             totalVotes = 0;
-            updateAllParticipantCards(); // Обновить карточки, чтобы сбросить счетчики на них
-            updateCheckoutButton(); // Скрыть кнопку checkout
-            overlay.style.display = 'none'; // Скрыть оверлей, так как thankYouMessage полноэкранное
+            updateAllParticipantCards();
+            updateCheckoutButton();
+            // overlay.style.display = 'none'; // Не скрываем, так как thankYouMessage его не использует и он может быть нужен другим модалкам
+            if (!sideMenu.classList.contains('open') && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex') {
+                 overlay.style.display = 'none'; // Скрываем оверлей, только если никакие другие модалки его не используют
+            }
 
-            // Можно добавить таймер для скрытия "Спасибо" сообщения
+
             setTimeout(() => {
                 thankYouMessageEl.style.display = 'none';
-                // participantGrid.innerHTML = `<p style="text-align:center;">${getTranslation('timerHeadingClosed')}</p>`; // Показать, что голосование завершено
-                 updateCountdown(); // Обновит состояние в зависимости от времени
-            }, 5000); // 5 секунд
+                 updateCountdown();
+            }, 5000);
         });
 
         // --- Логика для Staff ---
@@ -1293,17 +1297,17 @@
                 staffUsernameInput.value = '';
                 staffPasswordInput.value = '';
                 loginErrorMessage.style.display = 'none';
-                
+
                 staffLoginModal.style.display = 'flex';
                 overlay.style.display = 'block';
-                localizePage(); // Локализовать модальное окно входа
+                localizePage();
             });
         }
 
         if (closeLoginModalBtn) {
             closeLoginModalBtn.addEventListener('click', () => {
                 staffLoginModal.style.display = 'none';
-                if (staffResultsModal.style.display !== 'flex' && sideMenu.style.right !== '0px' && confirmationModal.style.display !== 'flex') {
+                if (staffResultsModal.style.display !== 'flex' && !sideMenu.classList.contains('open') && confirmationModal.style.display !== 'flex') {
                     overlay.style.display = 'none';
                 }
             });
@@ -1315,12 +1319,12 @@
                 const password = staffPasswordInput.value;
                 const currentLang = localStorage.getItem('selectedLanguage') || 'en';
 
-                if (username === STAFF_USERNAME && password === STAFF_PASSWORD) {
+                if (username === HIDDEN_STAFF_USERNAME && password === HIDDEN_STAFF_PASSWORD) {
                     staffLoginModal.style.display = 'none';
                     // overlay остается видимым для окна результатов
                     displayVotingResults();
                     staffResultsModal.style.display = 'flex';
-                    localizePage(); // Локализовать статичные части окна результатов (например, заголовок)
+                    localizePage();
                 } else {
                     loginErrorMessage.textContent = getTranslation("loginError", currentLang);
                     loginErrorMessage.style.display = 'block';
@@ -1331,44 +1335,44 @@
         if (closeResultsModalBtn) {
             closeResultsModalBtn.addEventListener('click', () => {
                 staffResultsModal.style.display = 'none';
-                 if (staffLoginModal.style.display !== 'flex' && sideMenu.style.right !== '0px' && confirmationModal.style.display !== 'flex') {
+                 if (staffLoginModal.style.display !== 'flex' && !sideMenu.classList.contains('open') && confirmationModal.style.display !== 'flex') {
                     overlay.style.display = 'none';
                 }
             });
         }
-        
+
         overlay.addEventListener('click', () => {
-            let anyModalOpen = false;
+            let anyModalActive = false;
             if (sideMenu.classList.contains('open')) {
-                closeSideMenu();
-                anyModalOpen = true;
+                closeSideMenu(); // Эта функция сама проверит другие модалки перед скрытием overlay
+                anyModalActive = true; // closeSideMenu сама управляет overlay
             }
-            if (confirmationModal.style.display === 'flex') {
-                // confirmationModal.style.display = 'none'; // Управляется своей кнопкой
-                // anyModalOpen = true; // Не закрываем по клику на оверлей, чтобы не потерять выбор
+             if (confirmationModal.style.display === 'flex') { // Не закрываем по клику на оверлей
+                anyModalActive = true;
             }
             if (staffLoginModal.style.display === 'flex') {
                 staffLoginModal.style.display = 'none';
-                anyModalOpen = true;
+                anyModalActive = true;
             }
             if (staffResultsModal.style.display === 'flex') {
                 staffResultsModal.style.display = 'none';
-                anyModalOpen = true;
+                anyModalActive = true;
             }
 
-            if (anyModalOpen && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex' && !sideMenu.classList.contains('open') && confirmationModal.style.display !== 'flex') {
+            // Если после закрытия модалки (staffLogin или staffResults) другие модалки (sideMenu, confirmation) не активны, скрываем overlay
+            if (anyModalActive && staffLoginModal.style.display !== 'flex' && staffResultsModal.style.display !== 'flex' && !sideMenu.classList.contains('open') && confirmationModal.style.display !== 'flex') {
                  overlay.style.display = 'none';
-            } else if (!anyModalOpen) {
-                 overlay.style.display = 'none'; // Если никакие модалки не были закрыты этим кликом, но оверлей виден
+            } else if (!anyModalActive && overlay.style.display === 'block') { // Если клик был по оверлею, и никакая модалка не была им закрыта (т.е. открыта только confirmationModal или ничего)
+                // Здесь не делаем ничего, чтобы не закрыть overlay для confirmationModal
             }
         });
 
 
         function displayVotingResults() {
-            resultsDataContainer.innerHTML = ''; // Очистить предыдущие результаты
+            resultsDataContainer.innerHTML = '';
             const currentLang = localStorage.getItem('selectedLanguage') || 'en';
 
-            if (Object.keys(selectedParticipants).length === 0) {
+            if (Object.keys(selectedParticipants).length === 0 || Object.values(selectedParticipants).every(p => p.votes === 0)) {
                 resultsDataContainer.innerHTML = `<p>${getTranslation('noVotesYet', currentLang)}</p>`;
                 return;
             }
@@ -1376,7 +1380,7 @@
             const table = document.createElement('table');
             const thead = table.createTHead();
             const headerRow = thead.insertRow();
-            
+
             const participantHeader = document.createElement('th');
             participantHeader.textContent = getTranslation('participantColumnHeader', currentLang);
             headerRow.appendChild(participantHeader);
@@ -1387,14 +1391,12 @@
 
             const votesHeader = document.createElement('th');
             votesHeader.textContent = getTranslation('votesColumnHeader', currentLang);
-            // votesHeader.style.textAlign = 'center'; // Уже задано в CSS через .votes-count
             headerRow.appendChild(votesHeader);
-            
+
             const tbody = table.createTBody();
 
-            // Сортировка: сначала по убыванию голосов, потом по имени артиста
             const sortedResults = Object.values(selectedParticipants)
-                .filter(p => p.votes > 0) // Показываем только тех, за кого голосовали
+                .filter(p => p.votes > 0)
                 .sort((a, b) => {
                     if (b.votes !== a.votes) {
                         return b.votes - a.votes;
@@ -1403,18 +1405,18 @@
                     const nameB = b.name || '';
                     return nameA.localeCompare(nameB);
                 });
-            
-            if (sortedResults.length === 0) {
+
+            if (sortedResults.length === 0) { // Дополнительная проверка после фильтрации
                  resultsDataContainer.innerHTML = `<p>${getTranslation('noVotesYet', currentLang)}</p>`;
                 return;
             }
 
             sortedResults.forEach(participant => {
                 const row = tbody.insertRow();
-                
+
                 const nameCell = row.insertCell();
                 nameCell.innerHTML = `<span class="participant-name">${participant.name}</span><br><small>${participant.country_name || participant.id.toUpperCase()}</small>`;
-                
+
                 const songCell = row.insertCell();
                 songCell.textContent = participant.song;
 
@@ -1425,6 +1427,13 @@
 
             resultsDataContainer.appendChild(table);
         }
+        // Добавьте ключ 'timeLeft' в переводы, если хотите локализовать эту часть
+        // Пример для translations.en: timeLeft: 'Time left'
+        // Пример для translations.ru: timeLeft: 'Осталось времени'
+        // Пример для translations.sv: timeLeft: 'Tid kvar'
+        translations.en.timeLeft = 'Time left';
+        translations.ru.timeLeft = 'Осталось времени';
+        translations.sv.timeLeft = 'Tid kvar';
 
     </script>
 </body>
