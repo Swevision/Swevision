@@ -1,298 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Swevision 2025</title>
-  <link rel="icon" href="HeathLogoSWE25.png" type="image/png">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Swevision Song Contest</title>
+  <link rel="icon" href="Heart.png" type="image/png">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #000;
-      color: white;
-    }
-    header {
-      background: url('.png') center/cover no-repeat;
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 40px 0;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: flex-start;
     }
-    .logo {
-      height: 60px;
-    }
-    nav a {
-      margin-left: 1.5rem;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 30px;
-      transition: background 0.3s;
-    }
-    nav a:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-    .slider {
-      position: relative;
-      max-width: 100%;
+
+    .window {
+      background: #f3f3f3;
+      border-radius: 10px;
+      width: 700px;
+      max-width: 95%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
       overflow: hidden;
-      height: 80vh;
     }
-    .slides {
+
+    .titlebar {
+      background: #f3f3f3;
+      height: 32px;
       display: flex;
-      transition: transform 1s ease-in-out;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 12px;
     }
-    .slide {
-      min-width: 100%;
-      height: 80vh;
-      background-size: cover;
-      background-position: center;
-    }
-    .dots {
+
+    .circles {
       position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 12px;
       display: flex;
       gap: 8px;
+      top: 50%;
+      transform: translateY(-50%);
     }
-    .dot {
+
+    .divider {
+      height: 1px;
+      background: #cccccc;
+      width: 100%;
+    }
+
+    .circle {
       width: 12px;
       height: 12px;
-      background: white;
       border-radius: 50%;
-      opacity: 0.5;
+    }
+
+    .red { background: #ff5f56; }
+    .yellow { background: #ffbd2e; }
+    .green { background: #27c93f; }
+
+    .title-text {
+      font-size: 14px;
+      color: #666;
+      user-select: none;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .lang-switch {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .lang-btn {
       cursor: pointer;
+      font-size: 12px;
+      color: #666;
+      background: transparent;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 2px 6px;
+      user-select: none;
+      transition: all 0.3s ease;
     }
-    .dot.active {
-      opacity: 1;
-      background: #c084fc;
+
+    .lang-btn.active, .lang-btn:hover {
+      border-color: #27c93f;
+      color: #27c93f;
+      font-weight: bold;
     }
-    .section {
-      padding: 4rem 2rem;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .section h3 {
+
+    .content {
+      padding: 30px;
       text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
+      color: #111;
+      background-color: #f3f3f3;
     }
-    .news-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
+
+    .content img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 25px;
     }
-    .news-card {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      overflow: hidden;
+
+    .content p {
+      margin-bottom: 15px;
+      line-height: 1.5;
     }
-    .news-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-    .news-card .content {
-      padding: 1rem;
-    }
-    .news-card time {
-      font-size: 0.85rem;
-      color: #bbb;
-      display: block;
-      margin-top: 0.5rem;
-    }
-    .winners-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-    }
-    .winner-card {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      overflow: hidden;
-      text-align: center;
-      padding-bottom: 1rem;
-    }
-    .winner-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-    .winner-card p {
-      margin: 0.5rem 0;
-    }
-    .all-winners-btn {
-      display: block;
-      margin-left: auto;
-      margin-top: 2rem;
-      background: red;
-      padding: 0.75rem 1.5rem;
-      color: white;
+
+    .email-link {
+      color: #333;
       text-decoration: none;
-      border-radius: 30px;
-      font-weight: 600;
-      width: fit-content;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 20px;
     }
-    footer {
-      background: #111;
-      padding: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #aaa;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    .email-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="SweLogo.png" alt="Swevision Logo" class="logo">
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="show.html">Show</a>
-      <a href="participants.html">Participants</a>
-      <a href="news.html">News</a>
-      <a href="gallery.html">Gallery</a>
-    </nav>
-  </header>
-
-  <div class="slider">
-    <div class="slides">
-      <div class="slide" style="background-image: url('photo_2025-05-21_10-33-17.jpg');"></div>
-      <div class="slide" style="background-image: url('image_2025-05-24_22-37-44.png');"></div>
-      <div class="slide" style="background-image: url('photo_2025-05-21_10-33-16.jpg');"></div>
-      <div class="slide" style="background-image: url('photo_2025-05-21_10-33-11.jpg');"></div>
+  <div class="window">
+    <div class="titlebar">
+      <div class="circles">
+        <div class="circle red"></div>
+        <div class="circle yellow"></div>
+        <div class="circle green"></div>
+      </div>
+      <div class="title-text">swevision.ru</div>
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
     </div>
-    <div class="dots"></div>
+    <div class="divider"></div>
+    <div class="content">
+      <!-- Подставь свою картинку -->
+      <img src="TEST.png" alt="SWE" />
+
+      <p class="text-attention"><strong>Внимание!</strong> Мы закрываем сайт для переноса на новый хостинг, а также доработки сайта.</p>
+      <p class="text-soon">Не переживайте! Совсем скоро мы вернёмся.</p>
+      <p class="text-follow"><strong>А пока, следите за новостями на сайте.</strong></p>
+
+      <a class="email-link" href="https://t.me/swevisionrbx" target="_blank" rel="noopener noreferrer">https://t.me/swevisionrbx</a>
+    </div>
   </div>
 
-  <section class="section">
-    <h3>Latest News</h3>
-    <div class="news-grid">
-                        <div class="news-card">
-        <img src="CONFIRMED2025.png" alt="JJ Wins">
-        <div class="content">
-          <h4>Confirmed participating countries</h4>
-          <p>https://youtu.be/2nReUsuVYL0</p>
-          <time datetime="2025-06-07T15:13:00Z"></time>
-        </div>
-                  <div class="news-card">
-        <img src="image_2025-05-25_11-00-17.png" alt="JJ Wins">
-        <div class="content">
-          <h4>The rehearsal of the night host!</h4>
-          <p>Petra Mede!</p>
-          <time datetime="2025-05-25T08:02:00Z"></time>
-        </div>
-       </div>
-            <div class="news-card">
-        <img src="DATAA.png" alt="JJ Wins">
-        <div class="content">
-          <h4>New video on YouTube!</h4>
-          <p>https://youtu.be/aMu9rCRmfEk</p>
-          <time datetime="2025-05-24T21:09:00Z"></time>
-        </div>
-      </div>
-      <div class="news-card">
-        <img src="image_2025-05-24_22-37-44.png" alt="JJ Wins">
-        <div class="content">
-          <h4>Beautiful stage ready</h4>
-          <p>We are getting more and more ready for the contest so that everything looks at its best for you.</p>
-          <time datetime="2025-05-24T14:22:00Z"></time>
-        </div>
-      </div>
-      <div class="news-card">
-        <img src="photo_2025-05-23_10-09-31.jpg" alt="Stage">
-        <div class="content">
-          <h4>Dates have been announced!</h4>
-          <p>Swevision Song Contest will be held on July 17, 19, 21</p>
-          <time datetime="2025-05-18T15:59:00Z"></time>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <a class="all-winners-btn" style="margin: 0 0 1.5rem auto;" href="winners.html">All winners →</a>
-    <h3>Winners</h3>
-    <div class="winners-grid">
-      <div class="winner-card">
-        <img src="NetyFoto.png" alt="Croatia">
-        <p><strong>Croatia</strong></p>
-        <p>Baby Lasagna</p>
-        <p>Rim Tim Tagi Dim</p>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    © 2025 Swevision. All rights reserved.
-  </footer>
-
   <script>
-    const slides = document.querySelector('.slides');
-    const dotsContainer = document.querySelector('.dots');
-    const totalSlides = slides.children.length;
-    let index = 0;
-
-    function createDots() {
-      for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
-        if (i === 0) dot.classList.add('active');
-        dot.addEventListener('click', () => moveToSlide(i));
-        dotsContainer.appendChild(dot);
+    const texts = {
+      ru: {
+        attention: '<strong>Внимание!</strong> Мы закрываем сайт для переноса на новый хостинг, а также доработки сайта.',
+        soon: 'Не переживайте! Совсем скоро мы вернёмся.',
+        follow: '<strong>А пока, следите за новостями в телеграм канале.</strong>',
+        link: 'https://t.me/swevisionrbx',
+      },
+      en: {
+        attention: '<strong>Attention!</strong> We are closing the site to move to a new hosting and improve it.',
+        soon: 'Don\'t worry! We will be back very soon.',
+        follow: '<strong>In the meantime, follow the news in the telegram channel.</strong>',
+        link: 'https://t.me/swevisionrbx',
       }
+    };
+
+    const langButtons = document.querySelectorAll('.lang-btn');
+    const attentionEl = document.querySelector('.text-attention');
+    const soonEl = document.querySelector('.text-soon');
+    const followEl = document.querySelector('.text-follow');
+    const linkEl = document.querySelector('.email-link');
+
+    function setLanguage(lang) {
+      if (!texts[lang]) return;
+
+      // Update text content
+      attentionEl.innerHTML = texts[lang].attention;
+      soonEl.textContent = texts[lang].soon;
+      followEl.innerHTML = texts[lang].follow;
+      linkEl.href = texts[lang].link;
+      linkEl.textContent = texts[lang].link;
+
+      // Update active button style
+      langButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+
+      // Save language preference
+      localStorage.setItem('swevisionLang', lang);
     }
 
-    function updateDots() {
-      [...dotsContainer.children].forEach(dot => dot.classList.remove('active'));
-      dotsContainer.children[index].classList.add('active');
-    }
-
-    function moveToSlide(i) {
-      index = i;
-      slides.style.transform = `translateX(-${index * 100}%)`;
-      updateDots();
-    }
-
-    function autoSlide() {
-      index = (index + 1) % totalSlides;
-      moveToSlide(index);
-    }
-
-    createDots();
-    setInterval(autoSlide, 5000);
-
-    function timeAgo(date) {
-      const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-      const intervals = [
-        { label: 'year', seconds: 31536000 },
-        { label: 'month', seconds: 2592000 },
-        { label: 'day', seconds: 86400 },
-        { label: 'hour', seconds: 3600 },
-        { label: 'minute', seconds: 60 },
-        { label: 'second', seconds: 1 }
-      ];
-      for (const interval of intervals) {
-        const count = Math.floor(seconds / interval.seconds);
-        if (count >= 1) {
-          return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
-        }
-      }
-      return 'just now';
-    }
-
-    document.querySelectorAll('time').forEach(t => {
-      const datetime = t.getAttribute('datetime');
-      t.textContent = timeAgo(datetime);
+    // Event listeners
+    langButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setLanguage(btn.dataset.lang);
+      });
     });
+
+    // Initialize language on page load
+    const savedLang = localStorage.getItem('swevisionLang') || 'ru';
+    setLanguage(savedLang);
   </script>
 </body>
 </html>
