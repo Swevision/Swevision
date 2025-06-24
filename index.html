@@ -1,271 +1,211 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Swevision Song Contest | Подача заявок</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swevision Song Contest</title>
   <link rel="icon" href="HeathLogoSWE25.png" type="image/png">
-<style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    background: url('https://images.hdqwalls.com/download/macos-monterey-dusk-5k-u2-1920x1080.jpg') no-repeat center center fixed;
-    background-size: cover;
-  }
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 40px 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
 
-  /* Верхнее меню */
-  .menu-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 38px;
-    background: rgba(255, 255, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 15px;
-    color: white;
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    font-size: 13px;
-  }
-  .menu-left {
-    display: flex;
-    align-items: center;
-  }
-  .menu-left span {
-    margin-right: 18px;
-    cursor: default;
-    user-select: none;
-  }
-  .menu-left .apple {
-    font-weight: bold;
-    font-size: 16px;
-  }
-  .menu-right img {
-    height: 16px;
-    margin-left: 10px;
-  }
+    .window {
+      background: #f3f3f3;
+      border-radius: 10px;
+      width: 700px;
+      max-width: 95%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
 
-  /* Док внизу */
-  .dock {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 6px 16px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    color: white;
-    font-weight: 600;
-    font-size: 16px;
-    user-select: none;
-    transition: opacity 0.3s ease;
-  }
-  .dock.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-  .dock img {
-    width: 28px;
-    height: 28px;
-    user-select: none;
-    pointer-events: none;
-  }
+    .titlebar {
+      background: #f3f3f3;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 12px;
+    }
 
-  /* Окно */
-  .window {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-    width: 400px;
-    max-width: 90%;
-    max-height: 90vh;
-    text-align: center;
-    z-index: 900;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    .circles {
+      position: absolute;
+      left: 12px;
+      display: flex;
+      gap: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
 
-    opacity: 0;
-    visibility: hidden;
-    transform: translate(-50%, -50%) scale(0.8);
-    transition:
-      opacity 0.3s ease,
-      visibility 0.3s ease,
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .window.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  .window.expanded {
-    width: 600px;
-    height: 700px;
-    transition: width 0.3s ease, height 0.3s ease;
-  }
+    .divider {
+      height: 1px;
+      background: #cccccc;
+      width: 100%;
+    }
 
-  .window-header {
-    background: #f3f3f3;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    flex-shrink: 0;
-  }
+    .circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
 
-  .window-header .circle {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px;
-    cursor: pointer;
-    flex-shrink: 0;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-  }
-  .red {
-    background: #ff5f56;
-  }
-  .yellow {
-    background: #ffbd2e;
-  }
-  .green {
-    background: #27c93f;
-  }
+    .red { background: #ff5f56; }
+    .yellow { background: #ffbd2e; }
+    .green { background: #27c93f; }
 
-  .window-body {
-    padding: 20px;
-    font-size: 15px;
-    overflow-y: auto;
-    flex-grow: 1;
-  }
+    .title-text {
+      font-size: 14px;
+      color: #666;
+      user-select: none;
+      flex-grow: 1;
+      text-align: center;
+    }
 
-  .extra-info {
-    margin-top: 10px;
-    color: #555;
-    font-size: 14px;
-    display: none;
-    height: 100%;
-  }
+    .lang-switch {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 10px;
+    }
 
-  .form-embed {
-    margin-top: 10px;
-    height: 90%;
-  }
+    .lang-btn {
+      cursor: pointer;
+      font-size: 12px;
+      color: #666;
+      background: transparent;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 2px 6px;
+      user-select: none;
+      transition: all 0.3s ease;
+    }
 
-  .form-embed iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    min-height: 400px;
-  }
-</style>
+    .lang-btn.active, .lang-btn:hover {
+      border-color: #27c93f;
+      color: #27c93f;
+      font-weight: bold;
+    }
+
+    .content {
+      padding: 30px;
+      text-align: center;
+      color: #111;
+      background-color: #f3f3f3;
+    }
+
+    .content img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    .content p {
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .email-link {
+      color: #333;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .email-link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <div class="menu-bar">
-    <div class="menu-left">
-      <span class="apple"></span>
-      <span>swevision.ru</span>
-      <span>Файл</span>
-      <span>Правка</span>
-      <span>Вид</span>
-      <span>Переход</span>
-      <span>Окно</span>
-      <span>Справка</span>
-    </div>
-    <div class="menu-right">
-      <img src="https://cdn-icons-png.flaticon.com/512/15/15474.png" title="WiFi" />
-      <img src="https://cdn3.iconfinder.com/data/icons/smashicons-essentials-md-solid-vol-4/24/338_-_Bluetooth_interaction_communication_essential-1024.png" title="Bluetooth" />
-      <img src="https://cdn4.iconfinder.com/data/icons/electronics-39/512/battery_full-1024.png" title="Battery" />
-    </div>
-  </div>
-
-  <div class="dock" id="dock" title="Открыть приложение">
-    <span>Open Me!</span>
-  </div>
-
-  <div class="window" id="window">
-    <div class="window-header">
-      <div class="circle red" onclick="closeWindow()" title="Закрыть"></div>
-      <div class="circle yellow" onclick="minimizeWindow()" title="Свернуть"></div>
-      <div class="circle green" onclick="toggleWindowSize()" title="Развернуть"></div>
-    </div>
-    <div class="window-body">
-      <h3>Ошибка 404</h3>
-      <p>Расширь через зеленую кнопку чтобы открыть полное окно для подачи заявок.</p>
-      <div class="extra-info" id="extraInfo">
-        <p>Дополнительная информация:</p>
-        <p>Срок подачи: до конца месяца.</p>
-        <p>Убедись, что все поля заполнены.</p>
-        <div class="form-embed">
-          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScSH4hIfB4q3Jg1DqC0p9WVpESphRlbS-_yCNj2YrclBYOiDw/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0" title="Google форма"></iframe>
-        </div>
+  <div class="window">
+    <div class="titlebar">
+      <div class="circles">
+        <div class="circle red"></div>
+        <div class="circle yellow"></div>
+        <div class="circle green"></div>
       </div>
+      <div class="title-text">swevision.ru</div>
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="content">
+      <!-- Подставь свою картинку -->
+      <img src="TEST.png" alt="SWE" />
+
+      <p class="text-attention"><strong>Внимание!</strong> Мы закрываем сайт для переноса на новый хостинг, а также доработки сайта.</p>
+      <p class="text-soon">Не переживайте! Совсем скоро мы вернёмся.</p>
+      <p class="text-follow"><strong>А пока, следите за новостями на сайте.</strong></p>
+
+      <a class="email-link" href="https://t.me/swevisionrbx" target="_blank" rel="noopener noreferrer">https://t.me/swevisionrbx</a>
     </div>
   </div>
 
   <script>
-    const win = document.getElementById('window');
-    const info = document.getElementById('extraInfo');
-    const dock = document.getElementById('dock');
+    const texts = {
+      ru: {
+        attention: '<strong>Внимание!</strong> Мы закрываем сайт для переноса на новый хостинг, а также доработки сайта.',
+        soon: 'Не переживайте! Совсем скоро мы вернёмся.',
+        follow: '<strong>А пока, следите за новостями в телеграм канале.</strong>',
+        link: 'https://t.me/swevisionrbx',
+      },
+      en: {
+        attention: '<strong>Attention!</strong> We are closing the site to move to a new hosting and improve it.',
+        soon: 'Don\'t worry! We will be back very soon.',
+        follow: '<strong>In the meantime, follow the news in the telegram channel.</strong>',
+        link: 'https://t.me/swevisionrbx',
+      }
+    };
 
-    let expanded = false;
-    let minimized = true; // окно по умолчанию свернуто
+    const langButtons = document.querySelectorAll('.lang-btn');
+    const attentionEl = document.querySelector('.text-attention');
+    const soonEl = document.querySelector('.text-soon');
+    const followEl = document.querySelector('.text-follow');
+    const linkEl = document.querySelector('.email-link');
 
-    dock.addEventListener('click', () => {
-      if (!minimized) return;
-      win.classList.add('show');
-      dock.classList.add('hidden');
-      minimized = false;
+    function setLanguage(lang) {
+      if (!texts[lang]) return;
+
+      // Update text content
+      attentionEl.innerHTML = texts[lang].attention;
+      soonEl.textContent = texts[lang].soon;
+      followEl.innerHTML = texts[lang].follow;
+      linkEl.href = texts[lang].link;
+      linkEl.textContent = texts[lang].link;
+
+      // Update active button style
+      langButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+
+      // Save language preference
+      localStorage.setItem('swevisionLang', lang);
+    }
+
+    // Event listeners
+    langButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setLanguage(btn.dataset.lang);
+      });
     });
 
-    function toggleWindowSize() {
-      expanded = !expanded;
-      if (expanded) {
-        win.classList.add('expanded');
-        info.style.display = 'block';
-      } else {
-        win.classList.remove('expanded');
-        info.style.display = 'none';
-      }
-    }
-
-    function minimizeWindow() {
-      if (minimized) return;
-      win.classList.remove('show');
-      setTimeout(() => {
-        dock.classList.remove('hidden');
-      }, 300);
-      minimized = true;
-      expanded = false;
-      info.style.display = 'none';
-      win.classList.remove('expanded');
-    }
-
-    function closeWindow() {
-      win.remove();
-      dock.remove();
-    }
+    // Initialize language on page load
+    const savedLang = localStorage.getItem('swevisionLang') || 'ru';
+    setLanguage(savedLang);
   </script>
 </body>
 </html>
