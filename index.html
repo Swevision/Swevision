@@ -1,211 +1,323 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Swevision Song Contest</title>
-  <link rel="icon" href="HeathLogoSWE25.png" type="image/png">
   <style>
-    body {
-      font-family: sans-serif;
-      background-color: #f2f2f2;
+    html, body {
       margin: 0;
-      padding: 40px 0;
+      padding: 0;
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+      animation: bgShift 20s infinite alternate ease-in-out;
+      color: #fff;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+
+    @keyframes bgShift {
+      0% { background: linear-gradient(135deg, #000000, #1a1a1a); }
+      100% { background: linear-gradient(135deg, #111111, #2a2a2a); }
+    }
+
+    header {
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
+      padding: 2rem 1rem;
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(30px);
+      z-index: 1000;
+      flex-direction: column;
+      animation: fadeIn 1s ease-in-out;
     }
 
-    .window {
-      background: #f3f3f3;
-      border-radius: 10px;
-      width: 700px;
-      max-width: 95%;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
-
-    .titlebar {
-      background: #f3f3f3;
-      height: 32px;
+    .logo-nav {
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
+      gap: 2rem;
       flex-wrap: wrap;
-      gap: 8px;
-      padding: 0 12px;
+      position: relative;
     }
 
-    .circles {
+    .logo-nav img {
+      height: 24px;
+    }
+
+    .logo-nav a {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+      padding: 0.5rem;
+      transition: color 0.3s;
+    }
+
+    .logo-nav a:hover {
+      color: #ff5fa2;
+    }
+
+    .logo-nav a::after {
+      content: '';
       position: absolute;
-      left: 12px;
-      display: flex;
-      gap: 8px;
-      top: 50%;
-      transform: translateY(-50%);
+      left: 0;
+      bottom: 0;
+      height: 2px;
+      width: 0;
+      background: #ff5fa2;
+      transition: width 0.3s ease;
     }
 
-    .divider {
-      height: 1px;
-      background: #cccccc;
+    .logo-nav a:hover::after {
       width: 100%;
     }
 
-    .circle {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .red { background: #ff5f56; }
-    .yellow { background: #ffbd2e; }
-    .green { background: #27c93f; }
-
-    .title-text {
-      font-size: 14px;
-      color: #666;
-      user-select: none;
-      flex-grow: 1;
+    main {
       text-align: center;
+      padding: 5rem 1rem 4rem;
+      position: relative;
+      z-index: 1;
+      min-height: calc(100vh - 300px);
+      box-sizing: border-box;
     }
 
-    .lang-switch {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      gap: 10px;
-    }
-
-    .lang-btn {
+    .highlight-card {
+      background: url('your-image.jpg') center/cover no-repeat;
+      border-radius: 1rem;
+      padding: 4rem 2rem;
+      margin: 3rem auto;
+      max-width: 900px;
+      position: relative;
+      overflow: hidden;
       cursor: pointer;
-      font-size: 12px;
-      color: #666;
-      background: transparent;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 2px 6px;
-      user-select: none;
-      transition: all 0.3s ease;
+      transition: transform 0.3s;
+      animation: fadeIn 2s ease;
     }
 
-    .lang-btn.active, .lang-btn:hover {
-      border-color: #27c93f;
-      color: #27c93f;
-      font-weight: bold;
+    .highlight-card:hover {
+      transform: scale(1.02);
     }
 
-    .content {
-      padding: 30px;
+    .highlight-card::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: radial-gradient(circle, rgba(255, 75, 200, 1), transparent 70%);
+      animation: heartbeat 1.5s infinite ease-in-out;
+      z-index: 0;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    .highlight-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+      animation: cardShine 5s infinite;
+      z-index: 1;
+    }
+
+    @keyframes cardShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .highlight-card h2 {
+      font-size: 2.5rem;
+      color: #ffffff;
+      margin: 0 0 0.5rem;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(90deg, #ff008c, #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+
+    .highlight-card p {
+      font-size: 1.1rem;
+      color: #cccccc;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .timer-label, #countdown, #live-viewers {
       text-align: center;
-      color: #111;
-      background-color: #f3f3f3;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeIn 2s ease-in-out;
     }
 
-    .content img {
-      max-width: 100%;
-      border-radius: 10px;
-      margin-bottom: 25px;
+    .timer-label {
+      font-size: 1.4rem;
+      margin-top: 2rem;
     }
 
-    .content p {
-      margin-bottom: 15px;
-      line-height: 1.5;
-    }
-
-    .email-link {
-      color: #333;
-      text-decoration: none;
+    #countdown {
+      font-size: 2rem;
       font-weight: bold;
-      display: inline-block;
-      margin-top: 20px;
+      margin-top: 0.5rem;
     }
 
-    .email-link:hover {
+    #live-viewers {
+      margin-top: 3rem;
+      font-size: 1.3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      margin-bottom: 5rem;
+      overflow: hidden;
+      height: 1.5em;
+    }
+
+    #live-viewers::before {
+      content: 'LIVE';
+      background: #ff5fa2;
+      color: black;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 5px;
+    }
+
+    #viewer-count {
+      display: inline-block;
+      transition: transform 0.5s ease, opacity 0.3s ease;
+    }
+
+    footer {
+      background: #111;
+      padding: 4rem 2rem 2rem;
+      font-size: 0.9rem;
+      color: #888;
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    footer a {
+      color: #888;
       text-decoration: underline;
+      margin: 0 0.25rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    body::after {
+      content: '';
+      display: block;
+      height: 0;
     }
   </style>
 </head>
 <body>
-  <div class="window">
-    <div class="titlebar">
-      <div class="circles">
-        <div class="circle red"></div>
-        <div class="circle yellow"></div>
-        <div class="circle green"></div>
-      </div>
-      <div class="title-text">swevision.ru</div>
-      <div class="lang-switch">
-        <button class="lang-btn" data-lang="ru">RU</button>
-        <button class="lang-btn" data-lang="en">EN</button>
-      </div>
+  <header>
+    <div class="logo-nav">
+      <img src="logotip.png" alt="Logo" />
+      <a href="participants.html">Participants</a>
+      <a href="social.html">Social</a>
+      <a href="about.html">About</a>
     </div>
-    <div class="divider"></div>
-    <div class="content">
-      <!-- Подставь свою картинку -->
-      <img src="TEST.png" alt="SWE" />
+  </header>
 
-      <p class="text-attention"><strong>Внимание!</strong> Мы закрываем сайт для переноса на новый хостинг, а также доработки сайта.</p>
-      <p class="text-soon">Не переживайте! Совсем скоро мы вернёмся.</p>
-      <p class="text-follow"><strong>А пока, следите за новостями на сайте.</strong></p>
+  <main>
+    <section class="highlight-card" onclick="window.location.href='https://www.youtube.com/live/cRNvo1jjfrw';">
+      <h2>First Semi-Final</h2>
+      <p>Learn More</p>
+    </section>
 
-      <a class="email-link" href="https://t.me/swevisionrbx" target="_blank" rel="noopener noreferrer">https://t.me/swevisionrbx</a>
-    </div>
-  </div>
+    <div class="timer-label">Before the start of the first semi-final:</div>
+    <div id="countdown">Loading...</div>
+    <div id="live-viewers">Viewing now - <span id="viewer-count">1</span></div>
+  </main>
+
+  <footer>
+    <p>Swevision is a fan-made Eurovision-style event held within Roblox. This site is not affiliated with the European Broadcasting Union or the official Eurovision Song Contest.</p>
+    <p>Participation is open to all Roblox users through our community events and qualifications. Some content may be limited to verified users or selected performers based on audition rounds. See our community page for more details and terms of participation.</p>
+    <p>Swevision reserves the right to modify event formats, dates, and rules. Full terms and conditions are available upon request or on our Telegram Channel.</p>
+    <p>Available for qualified participants only. By registering in a Swevision event, you may gain access to limited-edition accessories or benefits for your Roblox avatar. Limit one per user. Offers are subject to change or expiration.</p>
+    <p>Some in-game assets or rewards may depend on verification or device capability. Terms apply. Swevision is not affiliated with Apple, Eurovision, or Roblox Corporation. For technical assistance, visit our Telegram Channel.</p>
+    <a href="#">Privacy Policy</a> |
+    <a href="#">Terms of Use</a>
+    <br />
+    <span>© 2025 RBU. All rights reserved.</span>
+  </footer>
 
   <script>
-    const texts = {
-      ru: {
-        attention: '<strong>Внимание!</strong> Мы закрываем сайт для переноса на новый хостинг, а также доработки сайта.',
-        soon: 'Не переживайте! Совсем скоро мы вернёмся.',
-        follow: '<strong>А пока, следите за новостями в телеграм канале.</strong>',
-        link: 'https://t.me/swevisionrbx',
-      },
-      en: {
-        attention: '<strong>Attention!</strong> We are closing the site to move to a new hosting and improve it.',
-        soon: 'Don\'t worry! We will be back very soon.',
-        follow: '<strong>In the meantime, follow the news in the telegram channel.</strong>',
-        link: 'https://t.me/swevisionrbx',
+    function updateCountdown() {
+      const eventDate = new Date('2025-07-17T19:00:00+03:00');
+      const now = new Date();
+      const diff = eventDate - now;
+
+      if (diff <= 0) {
+        document.getElementById('countdown').textContent = 'The event has started!';
+        return;
       }
-    };
 
-    const langButtons = document.querySelectorAll('.lang-btn');
-    const attentionEl = document.querySelector('.text-attention');
-    const soonEl = document.querySelector('.text-soon');
-    const followEl = document.querySelector('.text-follow');
-    const linkEl = document.querySelector('.email-link');
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
 
-    function setLanguage(lang) {
-      if (!texts[lang]) return;
-
-      // Update text content
-      attentionEl.innerHTML = texts[lang].attention;
-      soonEl.textContent = texts[lang].soon;
-      followEl.innerHTML = texts[lang].follow;
-      linkEl.href = texts[lang].link;
-      linkEl.textContent = texts[lang].link;
-
-      // Update active button style
-      langButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.lang === lang);
-      });
-
-      // Save language preference
-      localStorage.setItem('swevisionLang', lang);
+      document.getElementById('countdown').textContent =
+        `${days}d | ${hours}h | ${minutes}m | ${seconds}s`;
     }
 
-    // Event listeners
-    langButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        setLanguage(btn.dataset.lang);
-      });
-    });
+    function updateViewerCount() {
+      const viewerSpan = document.getElementById('viewer-count');
+      const current = parseInt(viewerSpan.textContent, 10);
+      const change = Math.random() < 0.1 ? -1 : (Math.random() < 0.1 ? 1 : 0);
+      const newCount = Math.max(1, current + change);
 
-    // Initialize language on page load
-    const savedLang = localStorage.getItem('swevisionLang') || 'ru';
-    setLanguage(savedLang);
+      if (newCount !== current) {
+        viewerSpan.style.transform = 'translateY(100%)';
+        viewerSpan.style.opacity = '0';
+
+        setTimeout(() => {
+          viewerSpan.textContent = newCount;
+          viewerSpan.style.transform = 'translateY(-100%)';
+
+          setTimeout(() => {
+            viewerSpan.style.transform = 'translateY(0)';
+            viewerSpan.style.opacity = '1';
+          }, 200);
+        }, 200);
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+    setInterval(updateViewerCount, 6000);
+    updateCountdown();
   </script>
 </body>
 </html>
