@@ -3,250 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Participants - Swevision 2025</title>
-  <link rel="icon" href="Heart.png" type="image/png">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>404 - Page Not Found | Swevision</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #000;
-      color: white;
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
-      background: url('.png') center/cover no-repeat;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      backdrop-filter: blur(4px);
-    }
-
-    .logo {
-      height: 60px;
-    }
-
-    nav a {
-      margin-left: 1.5rem;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 30px;
-      transition: background 0.3s;
-    }
-
-    nav a:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 2rem;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .buttons {
       display: flex;
       justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      align-items: center;
+      padding: 2rem 1rem;
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(30px);
+      z-index: 1000;
+      flex-direction: column;
+    }
+
+    .logo-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
       flex-wrap: wrap;
     }
 
-    .buttons button {
-      background: transparent;
-      border: 2px solid #fff;
+    .logo-nav img {
+      height: 24px;
+    }
+
+    .logo-nav a {
       color: #fff;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+      padding: 0.5rem;
+      transition: color 0.3s;
+    }
+
+    .logo-nav a:hover {
+      color: #ff5fa2;
+    }
+
+    .logo-nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 2px;
+      width: 0;
+      background: #ff5fa2;
+      transition: width 0.3s ease;
+    }
+
+    .logo-nav a:hover::after {
+      width: 100%;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .stop-sign {
+      font-size: 5rem;
+      font-weight: bold;
+      color: red;
+      text-shadow: 0 0 15px red, 0 0 30px crimson;
+      margin-bottom: 1rem;
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px red, 0 0 20px crimson;
+      }
+      to {
+        text-shadow: 0 0 20px red, 0 0 40px crimson;
+      }
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .back-button {
+      background: red;
+      border: none;
+      color: #fff;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      font-weight: bold;
       border-radius: 30px;
       cursor: pointer;
       transition: background 0.3s;
+      text-transform: uppercase;
     }
 
-    .buttons button:hover {
-      background: #c084fc;
-      color: #000;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .card:hover {
-      transform: scale(1.05);
-    }
-
-    .card img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .card-content {
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .card-content p {
-      margin: 0.25rem 0;
+    .back-button:hover {
+      background: #ff3b3b;
     }
 
     footer {
       background: #111;
       padding: 2rem;
-      text-align: center;
       font-size: 0.9rem;
-      color: #aaa;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #888;
+      text-align: center;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: underline;
+      margin: 0 0.25rem;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="SweLogo.png" alt="Swevision Logo" class="logo">
-    <nav>
-      <a href="vote.html">Vote!</a>
-      <a href="index.html">Home</a>
-      <a href="show.html">Show</a>
+    <div class="logo-nav">
+      <img src="logotip.png" alt="Swevision Logo" />
       <a href="participants.html">Participants</a>
-      <a href="news.html">News</a>
-      <a href="gallery.html">Gallery</a>
-    </nav>
+      <a href="social.html">Social</a>
+      <a href="about.html">About</a>
+    </div>
   </header>
 
-  <div class="container">
-    <h1>All the participants</h1>
-    <div class="buttons">
-      <button onclick="filter('semi1')">First Semi-Final</button>
-      <button onclick="filter('semi2')">Second Semi-Final</button>
-      <button onclick="filter('final')">Grand Final</button>
-      <button onclick="filter('all')">Show All</button>
-    </div>
-
-    <div class="grid" id="participants-grid">
-      <div class="card" data-group="semi1" onclick="goToArtist('Ukraine2025.html')">
-        <img src="photo_2025-05-21_23-00-06.jpg" alt="Ukraine">
-        <div class="card-content">
-          <p><strong>Ukraine</strong></p>
-          <p>alyona alyona & Jerry Heil</p>
-          <p>Teresa & Maria</p>
-        </div>
-      </div>
-
-      <div class="card" data-group="semi1" onclick="goToArtist('Iceland2025.html')">
-        <img src="image_2025-05-21_21-02-37.png" alt="Iceland">
-        <div class="card-content">
-          <p><strong>Iceland</strong></p>
-          <p>VÆB</p>
-          <p>RÓA</p>
-        </div>
-      </div>
-
-            <div class="card" data-group="semi1" onclick="goToArtist('Armenia2025.html')">
-        <img src="NetyFoto.png" alt="Armenia">
-        <div class="card-content">
-          <p><strong>Armenia</strong></p>
-          <p>PARG</p>
-          <p>Survivor</p>
-        </div>
-      </div>
-
-            <div class="card" data-group="semi2" onclick="goToArtist('Norway2025.html')">
-        <img src="NetyFoto.png" alt="Norway">
-        <div class="card-content">
-          <p><strong>Norway</strong></p>
-          <p>Kyle Alessandro</p>
-          <p>Lighter</p>
-        </div>
-      </div>
-
-      <div class="card" data-group="semi2" onclick="goToArtist('Estonia2025.html')">
-        <img src="image_2025-05-21_21-05-12.png" alt="Estonia">
-        <div class="card-content">
-          <p><strong>Estonia</strong></p>
-          <p>Tommy Cash</p>
-          <p>Espresso Macchiato</p>
-        </div>
-      </div>
-
-      <div class="card" data-group="semi2" onclick="goToArtist('Russia2025.html')">
-        <img src="NetyFoto.png" alt="Russia">
-        <div class="card-content">
-          <p><strong>Russia</strong></p>
-          <p>Sergey Lazarev</p>
-          <p>You Are The Only One</p>
-        </div>
-      </div>
-
-            <div class="card" data-group="semi1" onclick="goToArtist('Luxembourg2025.html')">
-        <img src="NetyFoto.png" alt="Luxembourg">
-        <div class="card-content">
-          <p><strong>Luxembourg</strong></p>
-          <p>Laura Thorn</p>
-          <p>la poupee monte le son</p>
-        </div>
-      </div>
-
-                  <div class="card" data-group="final" onclick="goToArtist('Croatia2025.html')">
-        <img src="NetyFoto.png" alt="Croatia">
-        <div class="card-content">
-          <p><strong>Croatia</strong></p>
-          <p>Marko Bošnjak</p>
-          <p>Poison Cake</p>
-        </div>
-      </div>
-
-      <div class="card" data-group="semi2" onclick="goToArtist('Australia2025.html')">
-        <img src="image_2025-05-21_20-59-56.png" alt="Australia">
-        <div class="card-content">
-          <p><strong>Australia</strong></p>
-          <p>Go-Jo</p>
-          <p>Milkshake Man</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <main>
+    <div class="stop-sign">STOP!</div>
+    <h1>404</h1>
+    <p>Oops... We looked everywhere, but unfortunately, this page could not be found.</p>
+    <p>Or maybe, just maybe... your page is still being built brick by brick.</p>
+    <button class="back-button" onclick="window.history.back()">Go Back</button>
+  </main>
 
   <footer>
-    © 2025 Swevision. All rights reserved.
+    <p>© 2025 RBU. All rights reserved.</p>
   </footer>
-
-  <script>
-    function filter(group) {
-      document.querySelectorAll('.card').forEach(card => {
-        card.style.display = (group === 'all' || card.dataset.group === group) ? '' : 'none';
-      });
-    }
-
-    function goToArtist(url) {
-      window.location.href = url;
-    }
-
-    // Show all by default
-    filter('all');
-  </script>
 </body>
 </html>
