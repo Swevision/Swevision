@@ -18,12 +18,6 @@
       animation: bgShift 20s infinite alternate ease-in-out;
       color: #fff;
       position: relative;
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-
-    html {
-      scroll-behavior: auto;
     }
 
     @keyframes bgShift {
@@ -42,7 +36,6 @@
       backdrop-filter: blur(30px);
       z-index: 1000;
       flex-direction: column;
-      animation: fadeIn 1s ease-in-out;
     }
 
     .logo-nav {
@@ -51,7 +44,6 @@
       justify-content: center;
       gap: 2rem;
       flex-wrap: wrap;
-      position: relative;
     }
 
     .logo-nav img {
@@ -63,116 +55,16 @@
       font-size: 1rem;
       font-weight: 500;
       text-decoration: none;
-      position: relative;
       padding: 0.5rem;
-      transition: color 0.3s;
     }
 
     .logo-nav a:hover {
       color: #ff5fa2;
     }
 
-    .logo-nav a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      height: 2px;
-      width: 0;
-      background: #ff5fa2;
-      transition: width 0.3s ease;
-    }
-
-    .logo-nav a:hover::after {
-      width: 100%;
-    }
-
     main {
       text-align: center;
-      padding: 5rem 1rem 4rem;
-      position: relative;
-      z-index: 1;
-      min-height: calc(100vh - 300px);
-      box-sizing: border-box;
-    }
-
-    .highlight-card {
-      background: url('your-image.jpg') center/cover no-repeat;
-      border-radius: 1rem;
-      padding: 4rem 2rem;
-      margin: 3rem auto;
-      max-width: 900px;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.3s;
-      animation: fadeIn 2s ease;
-    }
-
-    .highlight-card:hover {
-      transform: scale(1.02);
-    }
-
-    .highlight-card::before {
-      content: '';
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      top: -50%;
-      left: -50%;
-      background: radial-gradient(circle, rgba(255, 75, 200, 1), transparent 70%);
-      animation: heartbeat 1.5s infinite ease-in-out;
-      z-index: 0;
-    }
-
-    @keyframes heartbeat {
-      0%, 100% { transform: scale(1); opacity: 0.7; }
-      50% { transform: scale(1.1); opacity: 1; }
-    }
-
-    .highlight-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -50%;
-      width: 200%;
-      height: 100%;
-      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
-      animation: cardShine 5s infinite;
-      z-index: 1;
-    }
-
-    @keyframes cardShine {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-
-    .highlight-card h2 {
-      font-size: 2.5rem;
-      color: #ffffff;
-      margin: 0 0 0.5rem;
-      position: relative;
-      z-index: 2;
-      background: linear-gradient(90deg, #ff008c, #fff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-    }
-
-    .highlight-card p {
-      font-size: 1.1rem;
-      color: #cccccc;
-      margin: 0;
-      position: relative;
-      z-index: 2;
-    }
-
-    .timer-label, #countdown, #live-viewers {
-      text-align: center;
-      margin-left: auto;
-      margin-right: auto;
-      animation: fadeIn 2s ease-in-out;
+      padding: 4rem 1rem 3rem;
     }
 
     .timer-label {
@@ -180,37 +72,15 @@
       margin-top: 2rem;
     }
 
-    #countdown {
+    #countdown, #voting-timer {
       font-size: 2rem;
       font-weight: bold;
       margin-top: 0.5rem;
     }
 
-    #live-viewers {
-      margin-top: 3rem;
-      font-size: 1.3rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 500;
-      margin-bottom: 5rem;
-      overflow: hidden;
-      height: 1.5em;
-    }
-
-    #live-viewers::before {
-      content: 'LIVE';
-      background: #ff5fa2;
-      color: black;
-      font-size: 0.75rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 5px;
-    }
-
-    #viewer-count {
-      display: inline-block;
-      transition: transform 0.5s ease, opacity 0.3s ease;
+    #voting-form-container {
+      margin: 2rem auto;
+      text-align: center;
     }
 
     footer {
@@ -219,24 +89,12 @@
       font-size: 0.9rem;
       color: #888;
       text-align: center;
-      animation: fadeIn 2s ease-in-out;
     }
 
     footer a {
       color: #888;
       text-decoration: underline;
       margin: 0 0.25rem;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    body::after {
-      content: '';
-      display: block;
-      height: 0;
     }
   </style>
 </head>
@@ -251,22 +109,18 @@
   </header>
 
   <main>
-    <section class="highlight-card" onclick="window.location.href='https://www.youtube.com/live/cRNvo1jjfrw';">
-      <h2>First Semi-Final</h2>
-      <p>Learn More</p>
-    </section>
+    <div class="timer-label" id="voting-status">До начала First Semi-Final осталось:</div>
+    <div id="voting-timer">Загрузка...</div>
 
-    <div class="timer-label">Before the start of the first semi-final:</div>
-    <div id="countdown">Loading...</div>
-    <div id="live-viewers">Viewing now - <span id="viewer-count">1</span></div>
+    <div id="voting-form-container">
+      <iframe id="voting-form"
+        src="https://docs.google.com/forms/d/e/1FAIpQLSf-peM0xTNbbjchaSCUnt2MSCrgajyZHYZrG3PMg2UJnGVn-w/viewform?embedded=true"
+        width="640" height="942" frameborder="0" marginheight="0" marginwidth="0">Загрузка…</iframe>
+    </div>
   </main>
 
   <footer>
     <p>Swevision is a fan-made Eurovision-style event held within Roblox. This site is not affiliated with the European Broadcasting Union or the official Eurovision Song Contest.</p>
-    <p>Participation is open to all Roblox users through our community events and qualifications. Some content may be limited to verified users or selected performers based on audition rounds. See our community page for more details and terms of participation.</p>
-    <p>Swevision reserves the right to modify event formats, dates, and rules. Full terms and conditions are available upon request or on our Telegram Channel.</p>
-    <p>Available for qualified participants only. By registering in a Swevision event, you may gain access to limited-edition accessories or benefits for your Roblox avatar. Limit one per user. Offers are subject to change or expiration.</p>
-    <p>Some in-game assets or rewards may depend on verification or device capability. Terms apply. Swevision is not affiliated with Apple, Eurovision, or Roblox Corporation. For technical assistance, visit our Telegram Channel.</p>
     <a href="#">Privacy Policy</a> |
     <a href="#">Terms of Use</a>
     <br />
@@ -274,50 +128,54 @@
   </footer>
 
   <script>
-    function updateCountdown() {
-      const eventDate = new Date('2025-07-17T19:00:00+03:00');
+    const START_TIME = new Date('2025-07-17T16:00:00Z'); // 19:00 по МСК в UTC
+    const VOTING_DURATION_MS = 20 * 60 * 1000; // 20 минут
+
+    function pad(n) {
+      return n < 10 ? '0' + n : n;
+    }
+
+    function formatCountdown(ms) {
+      const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((ms / (1000 * 60)) % 60);
+      const seconds = Math.floor((ms / 1000) % 60);
+      return `${pad(days)}d | ${pad(hours)}h | ${pad(minutes)}m | ${pad(seconds)}s`;
+    }
+
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      return `${pad(mins)}:${pad(secs)}`;
+    }
+
+    function updateVotingStatus() {
       const now = new Date();
-      const diff = eventDate - now;
+      const votingStatus = document.getElementById("voting-status");
+      const votingTimer = document.getElementById("voting-timer");
+      const formContainer = document.getElementById("voting-form-container");
 
-      if (diff <= 0) {
-        document.getElementById('countdown').textContent = 'The event has started!';
-        return;
-      }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      document.getElementById('countdown').textContent =
-        `${days}d | ${hours}h | ${minutes}m | ${seconds}s`;
-    }
-
-    function updateViewerCount() {
-      const viewerSpan = document.getElementById('viewer-count');
-      const current = parseInt(viewerSpan.textContent, 10);
-      const change = Math.random() < 0.1 ? -1 : (Math.random() < 0.1 ? 1 : 0);
-      const newCount = Math.max(1, current + change);
-
-      if (newCount !== current) {
-        viewerSpan.style.transform = 'translateY(100%)';
-        viewerSpan.style.opacity = '0';
-
-        setTimeout(() => {
-          viewerSpan.textContent = newCount;
-          viewerSpan.style.transform = 'translateY(-100%)';
-
-          setTimeout(() => {
-            viewerSpan.style.transform = 'translateY(0)';
-            viewerSpan.style.opacity = '1';
-          }, 200);
-        }, 200);
+      if (now < START_TIME) {
+        const timeLeft = START_TIME - now;
+        votingStatus.textContent = "До начала First Semi-Final осталось:";
+        votingTimer.textContent = formatCountdown(timeLeft);
+        formContainer.style.display = "none";
+      } else if (now >= START_TIME && now < new Date(START_TIME.getTime() + VOTING_DURATION_MS)) {
+        const endTime = new Date(START_TIME.getTime() + VOTING_DURATION_MS);
+        const timeLeft = endTime - now;
+        votingStatus.textContent = "🗳️ Голосование началось! До конца осталось:";
+        votingTimer.textContent = formatTime(timeLeft);
+        formContainer.style.display = "block";
+      } else {
+        votingStatus.textContent = "❌ Голосование завершено!";
+        votingTimer.textContent = "";
+        formContainer.style.display = "none";
       }
     }
 
-    setInterval(updateCountdown, 1000);
-    setInterval(updateViewerCount, 6000);
-    updateCountdown();
+    setInterval(updateVotingStatus, 1000);
+    updateVotingStatus();
   </script>
 </body>
 </html>
