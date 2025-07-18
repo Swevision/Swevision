@@ -109,13 +109,13 @@
   </header>
 
   <main>
-    <div class="timer-label" id="voting-status">До начала First Semi-Final осталось:</div>
+    <div class="timer-label" id="voting-status">До начала голосования осталось:</div>
     <div id="voting-timer">Загрузка...</div>
 
-    <div id="voting-form-container">
+    <div id="voting-form-container" style="display: none;">
       <iframe id="voting-form"
-        src="https://docs.google.com/forms/d/e/1FAIpQLSf-peM0xTNbbjchaSCUnt2MSCrgajyZHYZrG3PMg2UJnGVn-w/viewform?embedded=true"
-        width="640" height="942" frameborder="0" marginheight="0" marginwidth="0">Загрузка…</iframe>
+        src="https://docs.google.com/forms/d/e/1FAIpQLSen5BsciSKkUaI6QR4YbJX_SXsdMytsgSnqubLcs_26Tmu3YQ/viewform?embedded=true"
+        width="640" height="872" frameborder="0" marginheight="0" marginwidth="0">Загрузка…</iframe>
     </div>
   </main>
 
@@ -128,8 +128,8 @@
   </footer>
 
   <script>
-    const START_TIME = new Date('2025-07-17T16:05:00Z'); // 19:00 по МСК в UTC
-    const VOTING_DURATION_MS = 20 * 60 * 1000; // 20 минут
+    const START_TIME = new Date('2025-07-19T16:05:00Z'); // 19:05 по МСК в UTC
+    const VOTING_DURATION_MS = 40 * 60 * 1000; // 40 минут
 
     function pad(n) {
       return n < 10 ? '0' + n : n;
@@ -158,7 +158,7 @@
 
       if (now < START_TIME) {
         const timeLeft = START_TIME - now;
-        votingStatus.textContent = "До начала First Semi-Final осталось:";
+        votingStatus.textContent = "До начала голосования осталось:";
         votingTimer.textContent = formatCountdown(timeLeft);
         formContainer.style.display = "none";
       } else if (now >= START_TIME && now < new Date(START_TIME.getTime() + VOTING_DURATION_MS)) {
