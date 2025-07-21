@@ -114,8 +114,8 @@
 
     <div id="voting-form-container" style="display: none;">
       <iframe id="voting-form"
-        src="https://docs.google.com/forms/d/e/1FAIpQLSen5BsciSKkUaI6QR4YbJX_SXsdMytsgSnqubLcs_26Tmu3YQ/viewform?embedded=true"
-        width="640" height="872" frameborder="0" marginheight="0" marginwidth="0">Загрузка…</iframe>
+        src="https://docs.google.com/forms/d/e/1FAIpQLSdWRtdVJhrxpqJeNln164aavBLYhtxLLsJA8NSSWo76djU3iQ/viewform?embedded=true"
+        width="640" height="952" frameborder="0" marginheight="0" marginwidth="0">Загрузка…</iframe>
     </div>
   </main>
 
@@ -128,8 +128,10 @@
   </footer>
 
   <script>
-    const START_TIME = new Date('2025-07-19T16:05:00Z'); // 19:05 по МСК в UTC
-    const VOTING_DURATION_MS = 40 * 60 * 1000; // 40 минут
+    // Время начала голосования: 17:20 по МСК = 14:20 UTC
+    const START_TIME = new Date('2025-07-21T14:20:00Z');
+    // Время окончания: 2 часа 40 минут = 160 минут = 9600000 мс
+    const VOTING_DURATION_MS = 160 * 60 * 1000;
 
     function pad(n) {
       return n < 10 ? '0' + n : n;
