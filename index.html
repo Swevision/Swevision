@@ -128,10 +128,9 @@
   </footer>
 
   <script>
-    // Время начала голосования: 17:20 по МСК = 14:20 UTC
+    // Время начала голосования: 17:20 МСК = 14:20 UTC
     const START_TIME = new Date('2025-07-21T14:20:00Z');
-    // Время окончания: 2 часа 40 минут = 160 минут = 9600000 мс
-    const VOTING_DURATION_MS = 160 * 60 * 1000;
+    const VOTING_DURATION_MS = 160 * 60 * 1000; // 2 часа 40 минут
 
     function pad(n) {
       return n < 10 ? '0' + n : n;
@@ -145,11 +144,12 @@
       return `${pad(days)}d | ${pad(hours)}h | ${pad(minutes)}m | ${pad(seconds)}s`;
     }
 
-    function formatTime(ms) {
+    function formatTimeReadable(ms) {
       const totalSeconds = Math.floor(ms / 1000);
-      const mins = Math.floor(totalSeconds / 60);
-      const secs = totalSeconds % 60;
-      return `${pad(mins)}:${pad(secs)}`;
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${pad(hours)} ч | ${pad(minutes)} м | ${pad(seconds)} с`;
     }
 
     function updateVotingStatus() {
@@ -167,7 +167,7 @@
         const endTime = new Date(START_TIME.getTime() + VOTING_DURATION_MS);
         const timeLeft = endTime - now;
         votingStatus.textContent = "🗳️ Голосование началось! До конца осталось:";
-        votingTimer.textContent = formatTime(timeLeft);
+        votingTimer.textContent = formatTimeReadable(timeLeft);
         formContainer.style.display = "block";
       } else {
         votingStatus.textContent = "❌ Голосование завершено!";
