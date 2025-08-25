@@ -1,183 +1,363 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Swevision Song Contest</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home | Swevision Song Contest</title>
+  <link rel="icon" href="/favicon.ico" />
+
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow-x: hidden;
+    :root{
+      --bg-top:#0d2a63; --bg-bottom:#0b1d4a; --ink:#e9f0ff; --card:#0d2b6a; --card-2:#0a2160; --shadow:0 10px 30px rgba(0,0,0,.25);
     }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif; color:var(--ink); background: radial-gradient(1000px 500px at 20% -10%, #2b67ff33 0%, transparent 70%), linear-gradient(180deg,var(--bg-top),var(--bg-bottom));}
+    a{color:inherit; text-decoration:none}
+    .container{max-width:1200px; margin-inline:auto; padding:0 16px}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: linear-gradient(135deg, #000000, #1a1a1a);
-      animation: bgShift 20s infinite alternate ease-in-out;
-      color: #fff;
-      position: relative;
-    }
+    /* ===== Header / Top bar ===== */
+    header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(130%) blur(6px); background: linear-gradient(180deg,#0e2f71ee,#0b1f55ee); border-bottom:1px solid #ffffff1a;}
+    .nav{display:flex; align-items:center; justify-content:space-between; height:72px}
+    .pill{background:#0e2f7166; padding:8px 14px; border-radius:999px; border:1px solid #ffffff22; font-weight:600; font-size:14px; transition:transform .2s, background .2s;}
+    .pill:hover{background:#173c8c99; transform:translateY(-1px)}
+    .center-logo{display:flex; align-items:center; justify-content:center;}
+    .center-logo img{max-height:40px; width:auto; display:block}
 
-    @keyframes bgShift {
-      0% { background: linear-gradient(135deg, #000000, #1a1a1a); }
-      100% { background: linear-gradient(135deg, #111111, #2a2a2a); }
-    }
+    /* ===== Desktop menu (row 2) ===== */
+    nav.main{padding-bottom:14px}
+    .menu{display:flex; align-items:center; gap:24px}
+    .menu>li{list-style:none; position:relative}
+    .menu>li>a{padding:10px 6px; display:inline-flex; align-items:center; gap:8px; font-weight:600; color:#e8eeff; opacity:.95}
+    .menu>li::after{content:""; position:absolute; left:8px; right:8px; bottom:-6px; height:3px; background:#fff; border-radius:2px; transform:scaleX(0); transform-origin:center; transition:transform .2s ease}
+    .menu>li:hover::after, .menu>li.active::after{transform:scaleX(1)}
+    .dropdown{position:absolute; top:40px; left:0; background:#0d2b6a; border:1px solid #ffffff22; border-radius:12px; padding:8px; display:none; min-width:160px; box-shadow:var(--shadow)}
+    .dropdown a{display:block; padding:10px 12px; border-radius:8px; font-weight:600; color:#e8eeffcc}
+    .dropdown a:hover{background:#12357c}
+    .menu>li:hover .dropdown{display:block}
 
-    header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem 1rem;
-      position: sticky;
-      top: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(30px);
-      z-index: 1000;
-      flex-direction: column;
-    }
+    /* ===== Mobile: hamburger & drawer ===== */
+    .hamburger{display:none; width:36px; height:28px; position:relative; cursor:pointer}
+    .hamburger span{position:absolute; left:0; right:0; height:3px; background:#fff; border-radius:2px; transition:.3s}
+    .hamburger span:nth-child(1){top:2px}
+    .hamburger span:nth-child(2){top:12px}
+    .hamburger span:nth-child(3){top:22px}
+    .drawer{position:fixed; inset:0; pointer-events:none}
+    .scrim{position:absolute; inset:0; background:#0008; opacity:0; transition:.3s}
+    .panel{position:absolute; top:0; left:-80%; width:80%; height:100%; background:#0c215a; border-right:1px solid #ffffff2a; box-shadow:var(--shadow); padding:18px; transition:transform .35s ease; transform:translateX(-10px)}
+    .drawer.open{pointer-events:auto}
+    .drawer.open .scrim{opacity:1}
+    .drawer.open .panel{left:0; transform:translateX(0)}
+    .drawer h3{margin:6px 0 12px; font-size:14px; color:#bcd1ff; letter-spacing:.2px}
+    .mnav a{display:block; padding:12px 10px; border-radius:10px; font-weight:700; color:#e8eeff}
+    .mnav a:hover{background:#14327a}
+    .m-group{margin-top:8px}
+    .m-sub{margin-left:8px; border-left:2px solid #ffffff22}
+    .m-sub a{padding-left:14px; font-weight:600; opacity:.95}
+    body.noscroll{overflow:hidden}
 
-    .logo-nav {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
+    /* ===== Slideshow ===== */
+    .hero{margin-top:18px}
+    .slideshow{position:relative; border-radius:22px; overflow:hidden; height:min(46vw,380px); background:#2a3c6a; box-shadow:var(--shadow)}
+    .slide{position:absolute; inset:0; opacity:0; transition:opacity .6s ease}
+    .slide.active{opacity:1}
+    .slide img{width:100%; height:100%; object-fit:cover; display:block}
+    .slide-overlay{position:absolute; left:24px; bottom:24px; display:flex; flex-direction:column; gap:12px}
+    .badge{display:inline-block; padding:10px 14px; border-radius:12px; background:#00000055; color:#fff; font-weight:700; backdrop-filter:blur(4px)}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; background:#2a54ff; color:#fff; border-radius:12px; font-weight:700; border:1px solid #ffffff33}
+    .btn:hover{filter:brightness(1.05)}
+    .dots{position:absolute; left:50%; transform:translateX(-50%); bottom:12px; display:flex; align-items:center; gap:10px}
+    .dot{width:28px; height:6px; border-radius:999px; background:#ffffff55; overflow:hidden}
+    .progress{height:100%; width:0%; background:#fff}
 
-    .logo-nav img {
-      height: 24px;
-    }
+    /* ===== Sections & Cards ===== */
+    .section{margin:34px 0}
+    .section-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px}
+    .section-title{font-size:22px; font-weight:800}
+    .row{display:grid; grid-template-columns:repeat(5,1fr); gap:14px}
+    @media (max-width:1100px){.row{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:720px){.row{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,var(--card),var(--card-2)); border:1px solid #ffffff1d; border-radius:18px; overflow:hidden; min-height:150px; display:flex; flex-direction:column; box-shadow:var(--shadow); cursor:pointer}
+    .thumb img{width:100%; height:110px; object-fit:cover; display:block}
+    .card-body{padding:10px 12px 14px}
+    .meta{font-size:12px; color:#bcd1ff; display:block; margin-bottom:6px}
+    .title{font-weight:700}
+    .card:hover{transform:translateY(-2px)}
 
-    .logo-nav a {
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 500;
-      text-decoration: none;
-      padding: 0.5rem;
-    }
+    /* ===== Winners ===== */
+    .winners{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
+    @media (max-width:720px){.winners{grid-template-columns:1fr}}
+    .winner{background:linear-gradient(180deg,var(--card),var(--card-2)); border:1px solid #ffffff1d; border-radius:18px; overflow:hidden; box-shadow:var(--shadow); cursor:pointer}
+    .winner-top{position:relative}
+    .winner-top img{width:100%; height:130px; object-fit:cover; display:block}
+    .city-tag{position:absolute; left:10px; top:10px; background:#00000066; color:#fff; font-weight:800; padding:6px 10px; border-radius:10px}
+    .winner-body{padding:12px 14px 16px}
+    .winner-flag{font-size:20px; margin-right:8px}
+    .winner-country{font-weight:800}
+    .winner-song{opacity:.9}
 
-    .logo-nav a:hover {
-      color: #ff5fa2;
-    }
+    /* ===== Partners & Footer image ===== */
+    .partners{background:#170b3a; border-radius:22px; padding:34px; box-shadow:var(--shadow); border:1px solid #ffffff18}
+    .partners .logo-box{margin:16px auto 0; max-width:420px; height:140px; border-radius:14px; background:#999}
+    .partners .logo-box img{max-height:140px; width:auto; display:block; margin:0 auto}
+    footer{margin:34px 0 60px}
+    .image-slot img{max-height:120px; display:block; margin:0 auto}
 
-    main {
-      text-align: center;
-      padding: 4rem 1rem 3rem;
-    }
-
-    .timer-label {
-      font-size: 1.4rem;
-      margin-top: 2rem;
-    }
-
-    #countdown, #voting-timer {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-top: 0.5rem;
-    }
-
-    #voting-form-container {
-      margin: 2rem auto;
-      text-align: center;
-    }
-
-    footer {
-      background: #111;
-      padding: 4rem 2rem 2rem;
-      font-size: 0.9rem;
-      color: #888;
-      text-align: center;
-    }
-
-    footer a {
-      color: #888;
-      text-decoration: underline;
-      margin: 0 0.25rem;
+    /* ===== Mobile tweaks ===== */
+    @media (max-width:768px){
+      /* hide top pills on mobile to simplify */
+      .pill{display:none}
+      nav.main{display:none}
+      .hamburger{display:block}
+      .slideshow{height:52vw}
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo-nav">
-      <img src="Logotip.png" alt="Logo" />
-      <a href="participants.html">Participants</a>
-      <a href="social.html">Social</a>
-      <a href="about.html">About</a>
+    <div class="container nav">
+      <a class="pill" href="united-by-music.html">United By Music</a>
+      <div class="center-logo"><img src="logotipchik.png" alt="Swevision Logo" /></div>
+      <div style="display:flex; align-items:center; gap:12px">
+        <a class="pill" href="https://example.com/merch" target="_blank" rel="noopener">Merch</a>
+        <div class="hamburger" id="hamburger" aria-label="Open menu" role="button" tabindex="0">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
     </div>
+
+    <!-- Desktop menu row -->
+    <nav class="container main">
+      <ul class="menu">
+        <li class="active"><a href="participants.html">Participants</a></li>
+        <li><a href="sochi-2026.html">Sochi 2026</a></li>
+        <li>
+          <a href="#">Social ▾</a>
+          <div class="dropdown">
+            <a href="https://www.tiktok.com/@swevision.rbx?_t=ZT-8zAWAUvBSZh&_r=1" target="_blank" rel="noopener">TikTok</a>
+            <a href="https://youtube.com/@swetvv?si=XU96eOkXtAbswZMg" target="_blank" rel="noopener">YouTube</a>
+            <a href="https://t.me/swevisionrbx" target="_blank" rel="noopener">Telegram</a>
+          </div>
+        </li>
+        <li>
+          <a href="#">History ▾</a>
+          <div class="dropdown">
+            <a href="history-by-contest.html">by Contest</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
   </header>
 
-  <main>
-    <div class="timer-label" id="voting-status">До начала голосования осталось:</div>
-    <div id="voting-timer">Загрузка...</div>
+  <!-- Mobile drawer -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="scrim" id="scrim"></div>
+    <aside class="panel" role="dialog" aria-modal="true">
+      <h3>Menu</h3>
+      <nav class="mnav">
+        <div class="m-group"><a href="participants.html">Participants</a></div>
+        <div class="m-group"><a href="sochi-2026.html">Sochi 2026</a></div>
+        <div class="m-group">
+          <a href="#" id="m-social">Social ▾</a>
+          <div class="m-sub" id="m-social-sub" style="display:none">
+            <a href="https://www.tiktok.com/@swevision.rbx?_t=ZT-8zAWAUvBSZh&_r=1" target="_blank" rel="noopener">TikTok</a>
+            <a href="https://youtube.com/@swetvv?si=XU96eOkXtAbswZMg" target="_blank" rel="noopener">YouTube</a>
+            <a href="https://t.me/swevisionrbx" target="_blank" rel="noopener">Telegram</a>
+          </div>
+        </div>
+        <div class="m-group">
+          <a href="#" id="m-history">History ▾</a>
+          <div class="m-sub" id="m-history-sub" style="display:none">
+            <a href="history-by-contest.html">by Contest</a>
+          </div>
+        </div>
+        <h3>More</h3>
+        <div class="m-group"><a href="united-by-music.html">United By Music</a></div>
+        <div class="m-group"><a href="https://example.com/merch" target="_blank" rel="noopener">Merch</a></div>
+      </nav>
+    </aside>
+  </div>
 
-    <div id="voting-form-container" style="display: none;">
-      <iframe id="voting-form"
-        src="https://docs.google.com/forms/d/e/1FAIpQLSdWRtdVJhrxpqJeNln164aavBLYhtxLLsJA8NSSWo76djU3iQ/viewform?embedded=true"
-        width="640" height="952" frameborder="0" marginheight="0" marginwidth="0">Загрузка…</iframe>
-    </div>
+  <main class="container">
+    <!-- ===== Slideshow ===== -->
+    <section class="hero">
+      <div class="slideshow" id="slideshow">
+        <a class="slide active" href="sochi-2026.html">
+          <img src="sirius2026.jpeg" alt="Slide 1" />
+          <div class="slide-overlay">
+            <span class="badge">It’s Sochi 2026!</span>
+            <span class="btn">Read more →</span>
+          </div>
+        </a>
+        <a class="slide" href="news.html">
+          <img src="winnernews2025.jpeg" alt="Slide 2" />
+          <div class="slide-overlay">
+            <span class="badge">RUSSIA IS THE WINNER OF SWEVISION SONG CONTEST 2025!</span>
+            <span class="btn">Read more →</span>
+          </div>
+        </a>
+        <a class="slide" href="tickets.html">
+          <img src="photo_2025-08-25%2012.30.12.jpeg" alt="Slide 3" />
+          <div class="slide-overlay">
+            <span class="badge">Who will take tomorrow's trophy? 👀</span>
+          </div>
+        </a>
+
+        <div class="dots" id="dots">
+          <div class="dot"><div class="progress"></div></div>
+          <div class="dot"><div class="progress"></div></div>
+          <div class="dot"><div class="progress"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== News Section ===== -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">News</h2>
+        <a class="btn" href="news.html">Read more →</a>
+      </div>
+      <div class="row" id="news-row">
+        <a class="card" href="article-sochi-host.html">
+          <div class="thumb"><img src="design2026.jpeg" alt="News 1" /></div>
+          <div class="card-body">
+            <span class="meta" data-date="2025-08-21">—</span>
+            <div class="title">Thematic design of Swevision Song Contest 2026 is presented!</div>
+          </div>
+        </a>
+        <a class="card" href="article-venues.html">
+          <div class="thumb"><img src="apphoto.jpeg" alt="News 2" /></div>
+          <div class="card-body">
+            <span class="meta" data-date="2025-08-18">—</span>
+            <div class="title">The Swevision app is officially out on Android!</div>
+          </div>
+        </a>
+        <a class="card" href="article-tickets.html">
+          <div class="thumb"><img src="winnernews2025.jpeg" alt="News 3" /></div>
+          <div class="card-body">
+            <span class="meta" data-date="2025-07-21">—</span>
+            <div class="title">RUSSIA IS THE WINNER OF SWEVISION SONG CONTEST 2025!</div>
+          </div>
+        </a>
+        <a class="card" href="article-fans.html">
+          <div class="thumb"><img src="photo_2025-08-25%2012.30.12.jpeg" alt="News 4" /></div>
+          <div class="card-body">
+            <span class="meta" data-date="2025-07-20">—</span>
+            <div class="title">Who will take tomorrow's trophy? 👀</div>
+          </div>
+        </a>
+        <a class="card" href="article-volunteers.html">
+          <div class="thumb"><img src="photo_2025-08-25%2012.33.23.jpeg" alt="News 5" /></div>
+          <div class="card-body">
+            <span class="meta" data-date="2025-07-12">—</span>
+            <div class="title">First Look: Dalmacija Arena — the heart of Swevision 2025!</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== Winners ===== -->
+    <section class="section">
+      <h2 class="section-title" style="margin-bottom:14px">Winners</h2>
+      <div class="winners">
+        <a class="winner" href="winner-2025.html">
+          <div class="winner-top">
+            <img src="sscw25.jpeg" alt="Winner 2025" />
+            <span class="city-tag">Dalmacija 2025</span>
+          </div>
+          <div class="winner-body">
+            <div><span class="winner-flag">🇷🇺</span><span class="winner-country">Russia</span></div>
+            <div class="winner-song">Sergey Lazarev – Scream</div>
+          </div>
+        </a>
+        <a class="winner" href="winner-2024.html">
+          <div class="winner-top">
+            <img src="01-05.24%20Corinne%20Cumming%20-%20EBU%207966.jpg" alt="Winner 2024" />
+            <span class="city-tag">Malmö 2024</span>
+          </div>
+          <div class="winner-body">
+            <div><span class="winner-flag">🇭🇷</span><span class="winner-country">Croatia</span></div>
+            <div class="winner-song">Baby Lasagna – Rim Tim Tag Dim</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== Partners ===== -->
+    <section class="section partners">
+      <div style="text-align:center">
+        <div style="font-weight:800; font-size:22px">Thank you to our partners</div>
+        <div style="opacity:.8; margin-top:4px">Presenting Partner</div>
+        <div class="logo-box"><img src=".png" alt="Partner Logo" /></div>
+      </div>
+    </section>
+
+    <!-- ===== Footer image slot ===== -->
+    <footer class="container">
+      <div class="image-slot">
+        <img src="2026logo.png" alt="Footer Image" />
+      </div>
+    </footer>
   </main>
 
-  <footer>
-    <p>Swevision is a fan-made Eurovision-style event held within Roblox. This site is not affiliated with the European Broadcasting Union or the official Eurovision Song Contest.</p>
-    <a href="#">Privacy Policy</a> |
-    <a href="#">Terms of Use</a>
-    <br />
-    <span>© 2025 RBU. All rights reserved.</span>
-  </footer>
-
   <script>
-    // Время начала голосования: 17:20 МСК = 14:20 UTC
-    const START_TIME = new Date('2025-07-21T14:20:00Z');
-    const VOTING_DURATION_MS = 160 * 60 * 1000; // 2 часа 40 минут
+    // ===== Mobile drawer controls =====
+    const drawer = document.getElementById('drawer');
+    const scrim = document.getElementById('scrim');
+    const burger = document.getElementById('hamburger');
+    const body = document.body;
+    function openDrawer(){drawer.classList.add('open'); body.classList.add('noscroll'); drawer.setAttribute('aria-hidden','false');}
+    function closeDrawer(){drawer.classList.remove('open'); body.classList.remove('noscroll'); drawer.setAttribute('aria-hidden','true');}
+    burger.addEventListener('click', openDrawer);
+    burger.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){openDrawer();}});
+    scrim.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer(); });
+    // mobile submenus
+    const ms = document.getElementById('m-social');
+    const mss = document.getElementById('m-social-sub');
+    const mh = document.getElementById('m-history');
+    const mhs = document.getElementById('m-history-sub');
+    ms.addEventListener('click', (e)=>{e.preventDefault(); mss.style.display = mss.style.display==='none'?'block':'none';});
+    mh.addEventListener('click', (e)=>{e.preventDefault(); mhs.style.display = mhs.style.display==='none'?'block':'none';});
 
-    function pad(n) {
-      return n < 10 ? '0' + n : n;
-    }
-
-    function formatCountdown(ms) {
-      const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((ms / (1000 * 60)) % 60);
-      const seconds = Math.floor((ms / 1000) % 60);
-      return `${pad(days)}d | ${pad(hours)}h | ${pad(minutes)}m | ${pad(seconds)}s`;
-    }
-
-    function formatTimeReadable(ms) {
-      const totalSeconds = Math.floor(ms / 1000);
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-      return `${pad(hours)} ч | ${pad(minutes)} м | ${pad(seconds)} с`;
-    }
-
-    function updateVotingStatus() {
-      const now = new Date();
-      const votingStatus = document.getElementById("voting-status");
-      const votingTimer = document.getElementById("voting-timer");
-      const formContainer = document.getElementById("voting-form-container");
-
-      if (now < START_TIME) {
-        const timeLeft = START_TIME - now;
-        votingStatus.textContent = "До начала голосования осталось:";
-        votingTimer.textContent = formatCountdown(timeLeft);
-        formContainer.style.display = "none";
-      } else if (now >= START_TIME && now < new Date(START_TIME.getTime() + VOTING_DURATION_MS)) {
-        const endTime = new Date(START_TIME.getTime() + VOTING_DURATION_MS);
-        const timeLeft = endTime - now;
-        votingStatus.textContent = "🗳️ Голосование началось! До конца осталось:";
-        votingTimer.textContent = formatTimeReadable(timeLeft);
-        formContainer.style.display = "block";
-      } else {
-        votingStatus.textContent = "❌ Голосование завершено!";
-        votingTimer.textContent = "";
-        formContainer.style.display = "none";
+    // ===== Slideshow with progress bars =====
+    (function(){
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      const progresses = Array.from(document.querySelectorAll('.progress'));
+      const DURATION = 5000; // 5s
+      let i = 0; let timer; let start;
+      function setActive(idx){
+        slides.forEach((s, n)=> s.classList.toggle('active', n===idx));
+        progresses.forEach((p)=>{ p.style.transition='none'; p.style.width='0%'; });
+        void progresses[idx].offsetWidth; // reflow
+        progresses[idx].style.transition = `width ${DURATION}ms linear`;
+        progresses[idx].style.width = '100%';
       }
-    }
+      function tick(ts){ if(!start) start = ts; if(ts-start >= DURATION){ i=(i+1)%slides.length; setActive(i); start = ts; } timer = requestAnimationFrame(tick); }
+      setActive(i); timer = requestAnimationFrame(tick);
+      dots.forEach((d, idx)=> d.addEventListener('click', ()=>{ i=idx; start=undefined; setActive(i); }));
+      const ss = document.getElementById('slideshow');
+      ss.addEventListener('mouseenter', ()=> cancelAnimationFrame(timer));
+      ss.addEventListener('mouseleave', ()=> {start=undefined; timer = requestAnimationFrame(tick);});
+    })();
 
-    setInterval(updateVotingStatus, 1000);
-    updateVotingStatus();
+    // ===== Time-ago for news cards =====
+    (function(){
+      const metas = document.querySelectorAll('[data-date]');
+      const now = new Date();
+      metas.forEach(m => {
+        const d = new Date(m.getAttribute('data-date'));
+        const diffMs = now - d; const sec = Math.floor(diffMs/1000); const min=Math.floor(sec/60); const hr=Math.floor(min/60); const day=Math.floor(hr/24); const month=Math.floor(day/30); const year=Math.floor(day/365);
+        let out; if (year>0) out = year + (year===1?' year ago':' years ago');
+        else if (month>0) out = month + (month===1?' month ago':' months ago');
+        else if (day>0) out = day + (day===1?' day ago':' days ago');
+        else if (hr>0) out = hr + (hr===1?' hour ago':' hours ago');
+        else if (min>0) out = min + (min===1?' minute ago':' minutes ago');
+        else out = 'just now';
+        m.textContent = out;
+      });
+    })();
   </script>
 </body>
 </html>
